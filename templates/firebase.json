@@ -1,0 +1,24 @@
+{
+  "hosting": {
+    "public": "web",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "rewrites": [
+      { "source": "/auth", "function": "app" },
+      { "source": "/auth/**", "function": "app" },
+      { "source": "/api", "function": "app" },
+      { "source": "/api/**", "function": "app" },
+      { "source": "/proxy", "function": "app" },
+      { "source": "/proxy/**", "function": "app" },
+      { "source": "/webhooks", "function": "app" },
+      { "source": "/webhooks/**", "function": "app" }
+    ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs20"
+  },
+  "firestore": {
+    "rules": "firestore.rules",
+    "indexes": "firestore.indexes.json"
+  }
+}

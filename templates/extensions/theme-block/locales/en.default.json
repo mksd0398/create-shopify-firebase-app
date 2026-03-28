@@ -1,0 +1,10 @@
+{
+  "name": "App Block",
+  "settings": {
+    "heading": { "label": "Heading" },
+    "description": { "label": "Description" },
+    "show_button": { "label": "Show button" },
+    "button_text": { "label": "Button text" },
+    "show_border": { "label": "Show border" }
+  }
+}

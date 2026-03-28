@@ -1,0 +1,69 @@
+{% comment %}
+  Theme App Extension Block
+  ─────────────────────────
+  Merchants add this via Theme Editor. Communicates with your backend
+  through the App Proxy at: /apps/{subpath}/your-route
+{% endcomment %}
+
+{{ 'app-block.css' | asset_url | stylesheet_tag }}
+
+<div
+  class="app-block"
+  id="app-block-{{ block.id }}"
+  data-show-border="{{ block.settings.show_border }}"
+>
+  {% if block.settings.heading != blank %}
+    <h2 class="app-block__heading">{{ block.settings.heading }}</h2>
+  {% endif %}
+
+  <div class="app-block__content">
+    {{ block.settings.description }}
+  </div>
+
+  {% if block.settings.show_button %}
+    <button class="app-block__button" type="button">
+      {{ block.settings.button_text }}
+    </button>
+  {% endif %}
+</div>
+
+{{ 'app-block.js' | asset_url | script_tag }}
+
+{% schema %}
+{
+  "name": "App Block",
+  "target": "section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "My App"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Customize this block in the Theme Editor.</p>"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_button",
+      "label": "Show button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Click me"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_border",
+      "label": "Show border",
+      "default": true
+    }
+  ]
+}
+{% endschema %}

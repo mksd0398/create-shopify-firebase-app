@@ -1,0 +1,38 @@
+# Shopify App Configuration
+# Docs: https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "{{APP_NAME}}"
+client_id = "{{API_KEY}}"
+application_url = "{{APP_URL}}"
+embedded = true
+
+[access_scopes]
+scopes = "{{SCOPES}}"
+
+[auth]
+redirect_urls = [
+  "{{APP_URL}}/auth/callback"
+]
+
+[webhooks]
+api_version = "2025-04"
+
+  # App lifecycle
+  [[webhooks.subscriptions]]
+  topics = [ "app/uninstalled" ]
+  uri = "{{APP_URL}}/webhooks"
+
+  # GDPR mandatory webhooks (handled automatically by Shopify via compliance endpoints)
+  [webhooks.privacy_compliance]
+  customer_deletion_url = "{{APP_URL}}/webhooks"
+  customer_data_request_url = "{{APP_URL}}/webhooks"
+  shop_deletion_url = "{{APP_URL}}/webhooks"
+
+# Uncomment to enable App Proxy (storefront-facing routes)
+# [app_proxy]
+# url = "{{APP_URL}}/proxy"
+# subpath = "myapp"
+# prefix = "apps"
+
+[pos]
+embedded = false

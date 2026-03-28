@@ -1,0 +1,11 @@
+.app-block { padding: 24px; margin: 16px 0; font-family: inherit; }
+.app-block[data-show-border="true"] { border: 1px solid #e1e3e5; border-radius: 12px; }
+.app-block__heading { font-size: 20px; font-weight: 600; margin-bottom: 12px; }
+.app-block__content { color: #6d7175; margin-bottom: 16px; line-height: 1.6; }
+.app-block__button {
+  display: inline-flex; align-items: center; padding: 10px 20px;
+  background: #008060; color: #fff; border: none; border-radius: 8px;
+  font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s;
+}
+.app-block__button:hover { background: #006e52; }
+.app-block__button:disabled { opacity: 0.5; cursor: not-allowed; }

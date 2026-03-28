@@ -1,0 +1,51 @@
+{
+  "name": "create-shopify-firebase-app",
+  "version": "1.0.0",
+  "description": "Create Shopify apps powered by Firebase — serverless, lightweight, zero-framework. The official alternative to Remix for Shopify + Firebase developers.",
+  "keywords": [
+    "shopify",
+    "firebase",
+    "shopify-app",
+    "shopify-firebase",
+    "create-shopify-app",
+    "firebase-shopify",
+    "shopify-cli",
+    "shopify-app-template",
+    "shopify-app-scaffold",
+    "firebase-functions",
+    "firestore",
+    "cloud-functions",
+    "serverless",
+    "embedded-app",
+    "app-bridge",
+    "theme-app-extension",
+    "shopify-oauth",
+    "shopify-webhooks",
+    "express",
+    "typescript"
+  ],
+  "homepage": "https://github.com/nickthecook/create-shopify-firebase-app#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nickthecook/create-shopify-firebase-app.git"
+  },
+  "license": "MIT",
+  "author": "",
+  "type": "module",
+  "bin": {
+    "create-shopify-firebase-app": "bin/create.js"
+  },
+  "files": [
+    "bin",
+    "lib",
+    "templates",
+    "LICENSE",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "prompts": "^2.4.2"
+  }
+}

@@ -1,0 +1,10 @@
+api_version = "2025-04"
+
+[[extensions]]
+name = "App Block"
+handle = "app-block"
+type = "theme_app_extension"
+
+  [[extensions.targeting]]
+  module = "./blocks/app-block.liquid"
+  target = "section"

@@ -1,0 +1,10 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // All access goes through Cloud Functions (admin SDK).
+    // No direct client-side access — the backend is the single trusted entry point.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

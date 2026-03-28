@@ -1,0 +1,57 @@
+/* Shopify-like admin styles for embedded app dashboard */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "San Francisco", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  font-size: 14px; line-height: 1.5; color: #1a1a1a; background: #f6f6f7;
+}
+
+.app-page { max-width: 960px; margin: 0 auto; padding: 20px 16px; }
+.page-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.page-header h1 { font-size: 20px; font-weight: 600; }
+
+.card {
+  background: #fff; border: 1px solid #e1e3e5; border-radius: 12px;
+  padding: 20px; margin-bottom: 16px; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+.card h2 { font-size: 16px; font-weight: 600; margin-bottom: 12px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px;
+  border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer;
+  border: 1px solid #c9cccf; background: #fff; color: #1a1a1a;
+  transition: background 0.15s;
+}
+.btn:hover { background: #f6f6f7; }
+.btn-primary { background: #008060; color: #fff; border-color: #008060; }
+.btn-primary:hover { background: #006e52; }
+.btn-danger { color: #d72c0d; border-color: #d72c0d; }
+.btn-danger:hover { background: #fff4f4; }
+
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 13px; font-weight: 500; margin-bottom: 4px; color: #6d7175; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 8px 12px; border: 1px solid #c9cccf; border-radius: 8px; font-size: 14px;
+}
+.form-group input:focus, .form-group select:focus { outline: none; border-color: #008060; box-shadow: 0 0 0 1px #008060; }
+
+.empty-state { text-align: center; padding: 40px 20px; }
+.empty-state h3 { font-size: 16px; margin-bottom: 8px; }
+.empty-state p { color: #6d7175; margin-bottom: 16px; }
+
+.loading-overlay { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 60px 20px; color: #6d7175; }
+.spinner { width: 20px; height: 20px; border: 2px solid #e1e3e5; border-top-color: #008060; border-radius: 50%; animation: spin 0.6s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px);
+  background: #1a1a1a; color: #fff; padding: 10px 20px; border-radius: 8px;
+  font-size: 13px; transition: transform 0.3s ease; z-index: 9999;
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+.badge-success { background: #e4f5e9; color: #00713a; }
+.badge-warning { background: #fff8e6; color: #8a6500; }
+.badge-error { background: #fff4f4; color: #d72c0d; }

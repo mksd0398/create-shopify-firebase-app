@@ -1,7 +1,7 @@
 {
   "name": "create-shopify-firebase-app",
-  "version": "2.0.0",
-  "description": "Android Studio-level scaffolding for Shopify apps. Multi-page dashboard, App Bridge, Polaris components, TypeScript or JavaScript — deploy for free on Firebase.",
+  "version": "2.0.1",
+  "description": "Create Shopify apps powered by Firebase — multi-page dashboard, App Bridge, Polaris components, TypeScript or JavaScript. Deploy for free.",
   "keywords": [
     "shopify",
     "firebase",

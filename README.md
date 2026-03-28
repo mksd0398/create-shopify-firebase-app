@@ -18,6 +18,25 @@ npx create-shopify-firebase-app my-app
 
 ---
 
+## Table of Contents
+
+- [What is this?](#what-is-this)
+- [Quick Start](#quick-start)
+- [Why Firebase?](#why-firebase)
+- [What's Inside](#whats-inside)
+- [Architecture](#architecture)
+- [CLI Usage](#cli-usage)
+- [Development](#development)
+- [Extending Your App](#extending-your-app)
+- [How Many Stores Can You Run for Free?](#how-many-stores-can-you-run-for-free)
+- [GDPR Compliance](#gdpr-compliance)
+- [Troubleshooting](#troubleshooting)
+- [Contributing](#contributing)
+- [Related](#related)
+- [License](#license)
+
+---
+
 ## What is this?
 
 The **Firebase alternative** to `shopify app init`. Instead of Remix + Prisma + Vercel, you get:
@@ -53,47 +72,65 @@ npx create-shopify-firebase-app my-app
 The interactive CLI guides you through everything — creating your Shopify app, setting up Firebase, and wiring it all together:
 
 ```
-  SHOPIFY + FIREBASE   Create a new Shopify app
+  🛍️  +  🔥  create-shopify-firebase-app
+  Serverless Shopify apps — free until you scale
 
-  ✔ Project directory name: my-app
-  ✔ App name: My App
+  === App Configuration ===
 
-  Shopify App Setup
-  ? How would you like to set up your Shopify app?
-    ❯ Create a new app (opens Partner Dashboard)
-      I have an existing app (enter credentials)
+  ? Project directory name: my-app
+  ? App name (shown in Shopify admin): My App
+  ? What kind of app are you building?
+    ❯ Public app — list on the Shopify App Store
+      Custom app — built for a single store
+
+  === Shopify Setup ===
+
+  ? How would you like to connect your Shopify app?
+    ❯ Create a new app — we'll guide you through it
+      I already have an app — enter my credentials
 
   ℹ Opening Shopify Partner Dashboard...
-  ✔ Client ID: abc123...
-  ✔ Client Secret: ********
-  ✔ API Scopes: read_products
 
-  Firebase Project Setup
-  ? Firebase project
-    ❯ Create a new Firebase project
+  Follow these steps:
+
+    1. Sign in to your Partner account
+    2. Go to Apps → Create app → Create app manually
+    3. Enter app name: My App
+    4. Copy the Client ID and Client Secret
+
+  ? Paste your Client ID (API Key): abc123...
+  ? Paste your Client Secret: ********
+  ? What API access does your app need?
+    ❯ Read products            read_products
+      Read + write products    read_products,write_products
+      Orders + products        read_products,write_products,read_orders,write_orders
+      Custom scopes — enter manually
+
+  === Firebase Setup ===
+
+  ℹ Fetching your Firebase projects...
+  ? Select a Firebase project
+    ❯ [create a new project]
       My Project (my-project-123)
       Another Project (another-456)
-      Enter project ID manually
+      [enter project ID manually]
 
-  [1/6] Scaffolding project...
+  === Setting Up ===
+
+  ℹ Scaffolding project...
   ✔ Created 27 files in my-app/
-
-  [2/6] Installing dependencies...
+  ℹ Installing dependencies...
   ✔ Dependencies installed
-
-  [3/6] Building TypeScript...
+  ℹ Building TypeScript...
   ✔ TypeScript compiled successfully
-
-  [4/6] Setting up Firebase...
+  ℹ Setting up Firebase...
   ✔ Firebase project linked + Firestore provisioned
-
-  [5/6] Checking Shopify CLI...
+  ℹ Checking Shopify CLI...
   ✔ Shopify CLI detected
-
-  [6/6] Initializing git...
+  ℹ Initializing git...
   ✔ Git repository initialized with first commit
 
-  SUCCESS   Your Shopify + Firebase app is ready!
+  ✔  All done! Your Shopify + Firebase app is ready.
 
   Next steps:
 
@@ -101,7 +138,7 @@ The interactive CLI guides you through everything — creating your Shopify app,
     firebase deploy
 ```
 
-No need to visit Firebase Console or Shopify Partner Dashboard beforehand — the CLI handles it for you.
+No need to visit Firebase Console or Shopify Partner Dashboard beforehand — the CLI guides you through everything.
 
 ### 4. Deploy & Install
 

@@ -3,20 +3,23 @@
     "public": "web",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
-      { "source": "/auth", "function": "app" },
-      { "source": "/auth/**", "function": "app" },
-      { "source": "/api", "function": "app" },
-      { "source": "/api/**", "function": "app" },
-      { "source": "/proxy", "function": "app" },
-      { "source": "/proxy/**", "function": "app" },
-      { "source": "/webhooks", "function": "app" },
-      { "source": "/webhooks/**", "function": "app" }
+      { "source": "/auth", "run": { "serviceId": "auth", "region": "us-central1" } },
+      { "source": "/auth/**", "run": { "serviceId": "auth", "region": "us-central1" } },
+      { "source": "/api", "run": { "serviceId": "api", "region": "us-central1" } },
+      { "source": "/api/**", "run": { "serviceId": "api", "region": "us-central1" } },
+      { "source": "/proxy", "run": { "serviceId": "proxy", "region": "us-central1" } },
+      { "source": "/proxy/**", "run": { "serviceId": "proxy", "region": "us-central1" } },
+      { "source": "/webhooks", "run": { "serviceId": "webhooks", "region": "us-central1" } },
+      { "source": "/webhooks/**", "run": { "serviceId": "webhooks", "region": "us-central1" } }
     ]
   },
-  "functions": {
-    "source": "functions",
-    "runtime": "nodejs20"
-  },
+  "functions": [
+    {
+      "source": "functions",
+      "codebase": "default",
+      "runtime": "nodejs20"
+    }
+  ],
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"

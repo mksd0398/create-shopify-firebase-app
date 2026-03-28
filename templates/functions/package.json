@@ -9,21 +9,23 @@
     "build": "tsc",
     "serve": "npm run build && firebase emulators:start --only functions,firestore",
     "deploy": "firebase deploy --only functions",
+    "deploy:auth": "firebase deploy --only functions:auth",
+    "deploy:api": "firebase deploy --only functions:api",
+    "deploy:webhooks": "firebase deploy --only functions:webhooks",
+    "deploy:proxy": "firebase deploy --only functions:proxy",
     "deploy:all": "firebase deploy"
   },
   "dependencies": {
     "cors": "^2.8.5",
     "express": "^4.21.0",
-    "firebase-admin": "^12.7.0",
-    "firebase-functions": "^5.1.1",
-    "jsonwebtoken": "^9.0.2",
-    "node-fetch": "^2.7.0"
+    "firebase-admin": "^13.0.0",
+    "firebase-functions": "^6.3.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
-    "@types/express": "^5.0.0",
+    "@types/express": "^4.17.21",
     "@types/jsonwebtoken": "^9.0.7",
-    "@types/node-fetch": "^2.6.12",
     "typescript": "^5.6.3"
   }
 }

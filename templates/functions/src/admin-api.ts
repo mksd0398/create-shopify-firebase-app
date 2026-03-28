@@ -1,5 +1,4 @@
 import { Router, Request, Response } from "express";
-import fetch from "node-fetch";
 import { verifySessionToken } from "./verify-token";
 import { getAccessToken } from "./auth";
 
@@ -7,6 +6,10 @@ export const adminApiRouter = Router();
 
 // All admin routes require session token verification
 adminApiRouter.use(verifySessionToken);
+
+// Shopify API version — update when Shopify releases new versions
+// Docs: https://shopify.dev/docs/api/usage/versioning
+const API_VERSION = "2026-01";
 
 // ─── Get shop info ───────────────────────────────────────────────────────
 adminApiRouter.get("/shop", async (req: Request, res: Response) => {
@@ -20,7 +23,7 @@ adminApiRouter.get("/shop", async (req: Request, res: Response) => {
 
   try {
     const response = await fetch(
-      `https://${shop}/admin/api/2025-04/graphql.json`,
+      `https://${shop}/admin/api/${API_VERSION}/graphql.json`,
       {
         method: "POST",
         headers: {
@@ -54,7 +57,7 @@ adminApiRouter.get("/products/search", async (req: Request, res: Response) => {
 
   try {
     const response = await fetch(
-      `https://${shop}/admin/api/2025-04/graphql.json`,
+      `https://${shop}/admin/api/${API_VERSION}/graphql.json`,
       {
         method: "POST",
         headers: {
@@ -108,9 +111,15 @@ adminApiRouter.get("/products/search", async (req: Request, res: Response) => {
 });
 
 // ──────────────────────────────────────────────────────────────────────────
-// Add your admin API routes below.
-// All routes are protected by session token verification.
+// HOW TO ADD A NEW ADMIN API ROUTE:
 //
-//   const shop = (req as any).shopDomain;
-//   const accessToken = await getAccessToken(shop);
+//   adminApiRouter.post("/my-endpoint", async (req, res) => {
+//     const shop = (req as any).shopDomain;
+//     const accessToken = await getAccessToken(shop);
+//     // Call Shopify Admin API, write to Firestore, etc.
+//     res.json({ success: true });
+//   });
+//
+// All routes are automatically protected by JWT session token verification.
+// Deploy: firebase deploy --only functions:api
 // ──────────────────────────────────────────────────────────────────────────

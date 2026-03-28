@@ -1,14 +1,33 @@
-import { Router, Request, Response } from "express";
 import crypto from "crypto";
-import fetch from "node-fetch";
 import { getConfig } from "./config";
 import { db } from "./firebase";
+import type { Request } from "firebase-functions/v2/https";
 
-export const authRouter = Router();
+/**
+ * Standalone OAuth handler — no Express, no middleware overhead.
+ *
+ * Routes:
+ *   GET /auth           → Start OAuth (redirect to Shopify consent screen)
+ *   GET /auth/callback  → Handle callback (exchange code, store session)
+ */
+export async function authHandler(req: Request, res: any): Promise<void> {
+  const urlPath = req.path;
+
+  if (req.method !== "GET") {
+    res.status(405).send("Method not allowed");
+    return;
+  }
+
+  if (urlPath === "/auth/callback") {
+    await handleCallback(req, res);
+  } else {
+    handleStart(req, res);
+  }
+}
 
 // ─── Step 1: Start OAuth ─────────────────────────────────────────────────
 // Merchant clicks "Install" → redirect to Shopify consent screen.
-authRouter.get("/", (req: Request, res: Response) => {
+function handleStart(req: Request, res: any): void {
   const { shop } = req.query;
   if (!shop || typeof shop !== "string") {
     res.status(400).send("Missing shop parameter");
@@ -33,11 +52,11 @@ authRouter.get("/", (req: Request, res: Response) => {
     `&state=${nonce}`;
 
   res.redirect(authUrl);
-});
+}
 
 // ─── Step 2: OAuth Callback ──────────────────────────────────────────────
 // Shopify redirects back with code + HMAC. Verify, exchange, store session.
-authRouter.get("/callback", async (req: Request, res: Response) => {
+async function handleCallback(req: Request, res: any): Promise<void> {
   const { shop, code, hmac, state } = req.query;
 
   if (!shop || !code || !hmac) {
@@ -47,7 +66,7 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
 
   const config = getConfig();
 
-  // Verify HMAC (primary security check — timing-safe)
+  // Verify HMAC (timing-safe comparison)
   const queryParams = { ...req.query };
   delete queryParams.hmac;
   delete queryParams.signature;
@@ -120,7 +139,7 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
     console.error("OAuth error:", err);
     res.status(500).send("OAuth error");
   }
-});
+}
 
 // Helper: get stored access token for a shop
 export async function getAccessToken(shop: string): Promise<string | null> {

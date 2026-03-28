@@ -1,6 +1,6 @@
 {
   "name": "create-shopify-firebase-app",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Create Shopify apps powered by Firebase — serverless, lightweight, zero-framework. The official alternative to Remix for Shopify + Firebase developers.",
   "keywords": [
     "shopify",

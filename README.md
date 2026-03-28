@@ -11,10 +11,9 @@ npx create-shopify-firebase-app my-app
 ```
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Shopify-App-7AB55C?logo=shopify&logoColor=white" />
-  <img src="https://img.shields.io/badge/Firebase-Backend-FFCA28?logo=firebase&logoColor=black" />
+  <img src="https://img.shields.io/badge/Shopify-2026--01-7AB55C?logo=shopify&logoColor=white" />
+  <img src="https://img.shields.io/badge/Firebase-v2%20Functions-FFCA28?logo=firebase&logoColor=black" />
   <img src="https://img.shields.io/badge/TypeScript-Functions-3178C6?logo=typescript&logoColor=white" />
-  <img src="https://img.shields.io/badge/Express-Server-000000?logo=express&logoColor=white" />
 </p>
 
 ---
@@ -23,12 +22,13 @@ npx create-shopify-firebase-app my-app
 
 The **Firebase alternative** to `shopify app init`. Instead of Remix + Prisma + Vercel, you get:
 
-- **Firebase Cloud Functions** (Express + TypeScript) for your backend
+- **Firebase v2 Cloud Functions** (gen 2) — 4 independent, auto-scaling TypeScript functions
 - **Cloud Firestore** for sessions and app data (auto-scaling, free tier)
 - **Firebase Hosting** for your embedded admin dashboard (free)
 - **Vanilla HTML/JS + App Bridge** for the frontend (no React, no build step)
 - **Theme App Extension** for storefront UI (works on all Shopify plans)
-- **Production-ready** OAuth, session tokens, webhooks, GDPR handlers — all included
+- **Shopify API 2026-01** (latest) — OAuth, session tokens, webhooks, GDPR handlers
+- **Production-ready** — deploy with one command, scale to millions
 
 One `npx` command scaffolds everything, installs dependencies, wires up Firebase, and initializes git. You're ready to `firebase deploy`.
 
@@ -121,7 +121,7 @@ shopify app dev
 
 | | `shopify app init` (Remix) | `create-shopify-firebase-app` |
 |---|---|---|
-| **Backend** | Remix server | Firebase Cloud Functions (Express) |
+| **Backend** | Remix server (monolith) | Firebase v2 Cloud Functions (4 independent functions) |
 | **Database** | Prisma + PostgreSQL | Cloud Firestore (NoSQL, auto-scaling) |
 | **Frontend** | React + Polaris | Vanilla HTML/JS + App Bridge |
 | **Hosting** | Vercel / Fly.io / Heroku | Firebase Hosting (free tier) |
@@ -130,7 +130,7 @@ shopify app dev
 | **Deploy** | Varies | `firebase deploy` (one command) |
 | **Cost** | $5-25/month hosting | Free tier covers most apps |
 | **Framework knowledge** | Remix + React required | Express + HTML (that's it) |
-| **Backend code** | ~2000+ lines (framework) | ~350 lines (you own all of it) |
+| **Scaling** | Single server | Per-function auto-scaling (Cloud Run) |
 | **GDPR webhooks** | Auto-handled | Included (ready for App Store) |
 | **Theme extensions** | Supported | Supported (same Shopify format) |
 | **Shopify Functions** | Supported | Supported (add via Shopify CLI) |
@@ -155,18 +155,18 @@ shopify app dev
 
 ```
 my-app/
-├── shopify.app.toml              # Shopify app config
+├── shopify.app.toml              # Shopify app config (API 2026-01)
 ├── firebase.json                 # Firebase Hosting + Functions + Firestore
 ├── firestore.rules               # Security rules (blocks direct client access)
 │
-├── functions/                    # ── Backend ──
+├── functions/                    # ── Backend (4 Cloud Functions) ──
 │   ├── src/
-│   │   ├── index.ts              # Express app + Cloud Function export
-│   │   ├── auth.ts               # OAuth 2.0 (install + callback + token storage)
+│   │   ├── index.ts              # Function exports (auth, api, webhooks, proxy)
+│   │   ├── auth.ts               # OAuth 2.0 (standalone — no Express)
 │   │   ├── verify-token.ts       # App Bridge JWT session token middleware
-│   │   ├── admin-api.ts          # Your admin dashboard API routes
-│   │   ├── proxy.ts              # Storefront-facing App Proxy routes
-│   │   ├── webhooks.ts           # Webhook handlers (uninstall + GDPR)
+│   │   ├── admin-api.ts          # Admin dashboard API routes (Express)
+│   │   ├── proxy.ts              # Storefront App Proxy routes (Express)
+│   │   ├── webhooks.ts           # Webhook handlers (standalone — no Express)
 │   │   ├── firebase.ts           # Firebase Admin SDK init
 │   │   └── config.ts             # Environment config
 │   └── .env                      # Your secrets (auto-generated, git-ignored)
@@ -187,6 +187,8 @@ my-app/
 
 ## Architecture
 
+Each function scales independently on Cloud Run (Firebase v2 / gen 2):
+
 ```
   Shopify Admin (iframe)
   ┌─────────────────────────────────────┐
@@ -195,12 +197,12 @@ my-app/
   └──────────────┬──────────────────────┘
                  │ Bearer <JWT>
                  ▼
-  Firebase Cloud Functions (Express)
+  Firebase v2 Cloud Functions (independent scaling)
   ┌─────────────────────────────────────┐
-  │  /auth      → OAuth 2.0 flow       │
-  │  /api/*     → Admin API (JWT auth)  │
-  │  /proxy/*   → App Proxy (HMAC)      │
-  │  /webhooks  → Webhooks (HMAC)       │
+  │  auth()      → OAuth 2.0 flow      │  (standalone, no Express)
+  │  api()       → Admin API (JWT)      │  (Express + middleware)
+  │  webhooks()  → Webhooks (HMAC)      │  (standalone, no Express)
+  │  proxy()     → App Proxy (HMAC)     │  (Express)
   └──────────────┬──────────────────────┘
                  │
                  ▼
@@ -211,6 +213,16 @@ my-app/
   │  (your data)   → App-specific       │
   └─────────────────────────────────────┘
 ```
+
+### Why split functions?
+
+| Benefit | How |
+|---------|-----|
+| **Faster webhooks** | `webhooks()` has no Express overhead — responds in milliseconds |
+| **Independent scaling** | Each function auto-scales based on its own traffic |
+| **Targeted deploys** | `firebase deploy --only functions:api` deploys just one function |
+| **Separate configs** | Each function gets its own memory, timeout, and concurrency |
+| **Lower cold starts** | Smaller functions = faster cold starts |
 
 ### Three Security Layers
 
@@ -265,14 +277,55 @@ shopify app dev
 ### Deploy
 
 ```bash
-firebase deploy              # Everything
-firebase deploy --only functions   # Backend only
-firebase deploy --only hosting     # Frontend only
+firebase deploy                        # Everything
+firebase deploy --only functions       # All functions
+firebase deploy --only functions:auth  # Just auth function
+firebase deploy --only functions:api   # Just API function
+firebase deploy --only hosting         # Frontend only
 ```
 
 ---
 
 ## Extending Your App
+
+### Add a new Cloud Function
+
+This is the most common extension pattern. Create a new file, export a handler, and wire it up:
+
+**1. Create `functions/src/my-feature.ts`:**
+
+```typescript
+import type { Request, Response } from "firebase-functions/v2/https";
+import { db } from "./firebase";
+
+export async function myFeatureHandler(req: Request, res: Response) {
+  // Your logic here
+  res.json({ success: true });
+}
+```
+
+**2. Export it in `functions/src/index.ts`:**
+
+```typescript
+import { myFeatureHandler } from "./my-feature";
+
+export const myFeature = onRequest(
+  { memory: "256MiB", timeoutSeconds: 60 },
+  myFeatureHandler,
+);
+```
+
+**3. Add a rewrite in `firebase.json`:**
+
+```json
+{ "source": "/my-feature/**", "function": "myFeature" }
+```
+
+**4. Deploy just your function:**
+
+```bash
+firebase deploy --only functions:myFeature
+```
 
 ### Add admin API routes
 
@@ -304,7 +357,7 @@ Edit `functions/src/webhooks.ts` and register in `shopify.app.toml`:
 
 ```typescript
 case "orders/create": {
-  const order = req.body;
+  const order = body;
   // Your logic
   break;
 }
@@ -324,6 +377,27 @@ Create `web/settings.html`, use the same pattern, navigate with `App.navigate("/
 ### Add Shopify billing
 
 Use the `appSubscriptionCreate` GraphQL mutation in your admin API routes.
+
+### Add a scheduled function (cron)
+
+```typescript
+// functions/src/cleanup.ts
+import { onSchedule } from "firebase-functions/v2/scheduler";
+import { db } from "./firebase";
+
+export const dailyCleanup = onSchedule("every 24 hours", async () => {
+  // Clean up expired nonces, old data, etc.
+  const cutoff = new Date(Date.now() - 48 * 60 * 60 * 1000);
+  const old = await db.collection("authNonces")
+    .where("createdAt", "<", cutoff.toISOString()).get();
+  for (const doc of old.docs) await doc.ref.delete();
+});
+```
+
+Export it in `index.ts`:
+```typescript
+export { dailyCleanup } from "./cleanup";
+```
 
 ---
 
@@ -364,8 +438,9 @@ These are **required** for Shopify App Store listing.
 | "Missing shop parameter" | Set **App URL** in Partner Dashboard to `https://PROJECT_ID.web.app` |
 | "HMAC verification failed" | Check `SHOPIFY_API_SECRET` in `functions/.env` |
 | "Invalid session token" | Verify `data-api-key` in `web/index.html` matches your API key |
-| Functions not receiving requests | Check `firebase.json` rewrites and run `firebase functions:list` |
+| Functions not receiving requests | Check `firebase.json` rewrites match function export names in `index.ts` |
 | Webhook failures | Must respond 200 within 5 seconds. Check `firebase functions:log` |
+| Individual function not deploying | Ensure export name in `index.ts` matches function name in `firebase.json` rewrite |
 
 ---
 
@@ -385,7 +460,7 @@ npm link  # Test locally: create-shopify-firebase-app test-app
 ## Related
 
 - [Shopify App Development](https://shopify.dev/docs/apps) — Official docs
-- [Firebase Cloud Functions](https://firebase.google.com/docs/functions) — Backend runtime
+- [Firebase v2 Cloud Functions](https://firebase.google.com/docs/functions) — Backend runtime (gen 2)
 - [Shopify App Bridge](https://shopify.dev/docs/api/app-bridge) — Embedded app SDK
 - [Shopify Admin GraphQL API](https://shopify.dev/docs/api/admin-graphql) — Store data API
 - [Theme App Extensions](https://shopify.dev/docs/apps/build/online-store/theme-app-extensions) — Storefront blocks

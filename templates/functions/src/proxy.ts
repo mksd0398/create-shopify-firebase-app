@@ -44,7 +44,15 @@ proxyRouter.get("/hello", (req: Request, res: Response) => {
 });
 
 // ──────────────────────────────────────────────────────────────────────────
-// Add storefront-facing routes below.
-// Always verify the proxy signature first.
-// Enable App Proxy in shopify.app.toml.
+// HOW TO ADD A NEW PROXY ROUTE:
+//
+//   proxyRouter.get("/my-route", (req, res) => {
+//     if (!verifyProxySignature(req.query as Record<string, any>)) {
+//       return res.status(403).json({ error: "Invalid signature" });
+//     }
+//     res.json({ hello: "storefront" });
+//   });
+//
+// Enable App Proxy in shopify.app.toml (uncomment the [app_proxy] section).
+// Deploy: firebase deploy --only functions:proxy
 // ──────────────────────────────────────────────────────────────────────────

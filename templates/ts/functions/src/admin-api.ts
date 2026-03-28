@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS = {
   greeting: "Welcome to our app!",
   theme: "auto",
   notifications: true,
+  orderAlerts: false,
   customCss: "",
 };
 

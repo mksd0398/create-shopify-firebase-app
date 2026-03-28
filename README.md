@@ -1,6 +1,6 @@
 # create-shopify-firebase-app
 
-> Create Shopify apps powered by Firebase. One command. Zero framework. Fully serverless.
+> Build and run Shopify apps for free. Pay nothing until you have real traffic. One command. Zero framework. Fully serverless.
 
 [![npm version](https://img.shields.io/npm/v/create-shopify-firebase-app.svg)](https://www.npmjs.com/package/create-shopify-firebase-app)
 [![Downloads](https://img.shields.io/npm/dm/create-shopify-firebase-app.svg)](https://www.npmjs.com/package/create-shopify-firebase-app)
@@ -119,7 +119,9 @@ shopify app dev
 
 ## Why Firebase?
 
-**Run your Shopify apps for free until you have big traffic.** Firebase's generous free tier means you pay $0/month for most apps — no credit card required to start. You only start paying when your app grows beyond the free limits, and even then it's pennies compared to traditional hosting.
+**$0/month to run your Shopify app. No credit card. No server. No bill until you're big.**
+
+Most Shopify app developers pay for hosting before they even have users. With Firebase, you deploy for free and only start paying when your app serves thousands of stores daily. Even at 50,000 installed stores, you're looking at ~$5/month. Try getting that from Vercel or Heroku.
 
 | | `shopify app init` (Remix) | `create-shopify-firebase-app` |
 |---|---|---|
@@ -403,19 +405,45 @@ export { dailyCleanup } from "./cleanup";
 
 ---
 
-## Firebase Free Tier
+## How Many Stores Can You Run for Free?
 
-The Spark (free) plan covers most Shopify apps:
+Firebase's free tier is generous. Here's what it actually means for a Shopify app:
 
-| Resource | Free Limit |
-|----------|-----------|
-| Cloud Functions | 2M invocations/month |
-| Firestore reads | 50K/day |
-| Firestore writes | 20K/day |
-| Hosting storage | 10 GB |
-| Hosting transfer | 360 MB/day |
+### Per-store usage (typical Shopify app)
 
-Need more? The Blaze plan (pay-as-you-go) costs most apps **under $5/month**.
+| Action | Function calls | Firestore reads | Firestore writes |
+|--------|---------------|-----------------|------------------|
+| Merchant opens admin dashboard | 5 | 5 | 0 |
+| Webhooks (orders, inventory) | 5 | 5 | 2 |
+| **Total per active store/day** | **~10** | **~10** | **~2** |
+
+### Free tier capacity
+
+| Firebase Resource | Free Limit | Stores Supported |
+|-------------------|-----------|-----------------|
+| Cloud Functions | 2M invocations/month (~66K/day) | **~6,600 daily active stores** |
+| Firestore reads | 50K/day | **~5,000 daily active stores** |
+| Firestore writes | 20K/day | **~10,000 daily active stores** |
+| Hosting bandwidth | 360 MB/day | **~7,000 page loads/day** (CDN-cached after first load) |
+
+**Bottleneck: Firestore reads at ~5,000 daily active stores.**
+
+Not every installed merchant opens your app daily. With a typical 20% daily active rate:
+
+> **Free tier supports ~25,000 installed stores** with normal usage patterns. That's $0/month.
+
+### When you outgrow free (Blaze pay-as-you-go)
+
+| Installed Stores | Daily Active | Monthly Cost |
+|-----------------|-------------|-------------|
+| 1 - 25,000 | up to 5,000 | **$0 (free)** |
+| 50,000 | ~10,000 | **~$5/month** |
+| 100,000 | ~20,000 | **~$15/month** |
+| 500,000 | ~100,000 | **~$80/month** |
+
+Compare that to Vercel/Heroku at **$25-100/month from day one**, before you even have your first user.
+
+No credit card required to start. No server to manage. No bill until you're successful.
 
 ---
 

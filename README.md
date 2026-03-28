@@ -44,33 +44,36 @@ One `npx` command scaffolds everything, installs dependencies, wires up Firebase
 | Firebase CLI | `npm i -g firebase-tools` | Yes, installed automatically if missing |
 | Shopify CLI | `npm i -g @shopify/cli` | Yes, installed automatically if missing |
 
-### 1. Create your Shopify app
-
-Go to [partners.shopify.com](https://partners.shopify.com/) → **Apps** → **Create app** → **Create app manually**.
-Copy the **Client ID** (API Key) and **Client Secret** (API Secret).
-
-### 2. Create your Firebase project
-
-Go to [console.firebase.google.com](https://console.firebase.google.com/) → **Add project**.
-Enable **Cloud Firestore** (production mode). Note the **Project ID**.
-
-### 3. Run the scaffold
+### 1. Run the scaffold
 
 ```bash
 npx create-shopify-firebase-app my-app
 ```
 
-The interactive CLI asks for your credentials and does the rest:
+The interactive CLI guides you through everything — creating your Shopify app, setting up Firebase, and wiring it all together:
 
 ```
   SHOPIFY + FIREBASE   Create a new Shopify app
 
   ✔ Project directory name: my-app
   ✔ App name: My App
-  ✔ Shopify API Key: abc123...
-  ✔ Shopify API Secret: ********
+
+  Shopify App Setup
+  ? How would you like to set up your Shopify app?
+    ❯ Create a new app (opens Partner Dashboard)
+      I have an existing app (enter credentials)
+
+  ℹ Opening Shopify Partner Dashboard...
+  ✔ Client ID: abc123...
+  ✔ Client Secret: ********
   ✔ API Scopes: read_products
-  ✔ Firebase Project ID: my-app-12345
+
+  Firebase Project Setup
+  ? Firebase project
+    ❯ Create a new Firebase project
+      My Project (my-project-123)
+      Another Project (another-456)
+      Enter project ID manually
 
   [1/6] Scaffolding project...
   ✔ Created 27 files in my-app/
@@ -82,7 +85,7 @@ The interactive CLI asks for your credentials and does the rest:
   ✔ TypeScript compiled successfully
 
   [4/6] Setting up Firebase...
-  ✔ Firebase project linked: my-app-12345
+  ✔ Firebase project linked + Firestore provisioned
 
   [5/6] Checking Shopify CLI...
   ✔ Shopify CLI detected
@@ -97,6 +100,8 @@ The interactive CLI asks for your credentials and does the rest:
     cd my-app
     firebase deploy
 ```
+
+No need to visit Firebase Console or Shopify Partner Dashboard beforehand — the CLI handles it for you.
 
 ### 4. Deploy & Install
 

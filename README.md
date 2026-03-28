@@ -117,7 +117,9 @@ shopify app dev
 
 ---
 
-## Why Firebase instead of Remix?
+## Why Firebase?
+
+**Run your Shopify apps for free until you have big traffic.** Firebase's generous free tier means you pay $0/month for most apps — no credit card required to start. You only start paying when your app grows beyond the free limits, and even then it's pennies compared to traditional hosting.
 
 | | `shopify app init` (Remix) | `create-shopify-firebase-app` |
 |---|---|---|
@@ -128,7 +130,7 @@ shopify app dev
 | **Auth** | `@shopify/shopify-app-remix` | Manual OAuth (140 lines, you own it) |
 | **Build** | Webpack / Vite | `tsc` (TypeScript compiler, no bundler) |
 | **Deploy** | Varies | `firebase deploy` (one command) |
-| **Cost** | $5-25/month hosting | Free tier covers most apps |
+| **Cost** | $5-25/month from day one | **$0/month** — free until you scale |
 | **Framework knowledge** | Remix + React required | Express + HTML (that's it) |
 | **Scaling** | Single server | Per-function auto-scaling (Cloud Run) |
 | **GDPR webhooks** | Auto-handled | Included (ready for App Store) |
@@ -137,11 +139,11 @@ shopify app dev
 
 ### When to use this
 
+- You want to **launch for free** and only pay when your app takes off
 - Custom apps for a single merchant
 - Public apps with simple admin UIs
 - Teams already using Firebase / Google Cloud
 - You want to understand every line of your app
-- You want free/cheap serverless hosting
 
 ### When to use Remix instead
 

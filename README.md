@@ -374,7 +374,7 @@ These are **required** for Shopify App Store listing.
 Contributions welcome! Please open an issue or PR.
 
 ```bash
-git clone https://github.com/nickthecook/create-shopify-firebase-app.git
+git clone https://github.com/mksd0398/create-shopify-firebase-app.git
 cd create-shopify-firebase-app
 npm install
 npm link  # Test locally: create-shopify-firebase-app test-app

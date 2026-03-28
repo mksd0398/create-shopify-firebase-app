@@ -24,13 +24,13 @@
     "express",
     "typescript"
   ],
-  "homepage": "https://github.com/nickthecook/create-shopify-firebase-app#readme",
+  "homepage": "https://github.com/mksd0398/create-shopify-firebase-app#readme",
   "repository": {
     "type": "git",
-    "url": "https://github.com/nickthecook/create-shopify-firebase-app.git"
+    "url": "https://github.com/mksd0398/create-shopify-firebase-app.git"
   },
   "license": "MIT",
-  "author": "",
+  "author": "Mayank Khan Singh DeSouza <mayank@kloctechnologies.com>",
   "type": "module",
   "bin": {
     "create-shopify-firebase-app": "bin/create.js"

@@ -447,24 +447,28 @@ export { dailyCleanup } from "./cleanup";
 
 Firebase's free tier is generous. Here's what it actually means for a Shopify app:
 
-### Per-store usage (typical Shopify app)
+### What each store costs you per day
 
-| Action | Function calls | Firestore reads | Firestore writes |
-|--------|---------------|-----------------|------------------|
-| Merchant opens admin dashboard | 5 | 5 | 0 |
-| Webhooks (orders, inventory) | 5 | 5 | 2 |
-| **Total per active store/day** | **~10** | **~10** | **~2** |
+Every time a merchant opens your app or a webhook fires, it uses a small amount of Firebase resources:
 
-### Free tier capacity
+| What happens | Function calls | DB reads | DB writes |
+|---|---|---|---|
+| Merchant opens your app in Shopify admin | 5 | 5 | 0 |
+| Webhooks fire (orders, inventory updates) | 5 | 5 | 2 |
+| **Total per store per day** | **~10** | **~10** | **~2** |
 
-| Firebase Resource | Free Limit | Stores Supported |
-|-------------------|-----------|-----------------|
-| Cloud Functions | 2M invocations/month (~66K/day) | **~6,600 daily active stores** |
-| Firestore reads | 50K/day | **~5,000 daily active stores** |
-| Firestore writes | 20K/day | **~10,000 daily active stores** |
-| Hosting bandwidth | 360 MB/day | **~7,000 page loads/day** (CDN-cached after first load) |
+### How many stores you can run for $0/month
 
-**Bottleneck: Firestore reads at ~5,000 daily active stores.**
+Firebase gives you a free quota every day. Divide that by per-store usage:
+
+| Firebase resource | Free daily quota | Enough for |
+|---|---|---|
+| Cloud Functions | 66,000 calls/day | **~6,600 stores** |
+| Firestore reads | 50,000 reads/day | **~5,000 stores** |
+| Firestore writes | 20,000 writes/day | **~10,000 stores** |
+| Hosting (HTML/CSS/JS) | 360 MB/day | **~7,000 stores** (cached after first load) |
+
+**You hit the free limit at ~5,000 daily active stores.** Firestore reads is the first resource to run out.
 
 Not every installed merchant opens your app daily. With a typical 20% daily active rate:
 

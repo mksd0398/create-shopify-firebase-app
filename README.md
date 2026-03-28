@@ -38,11 +38,11 @@ One `npx` command scaffolds everything, installs dependencies, wires up Firebase
 
 ### Prerequisites
 
-| Tool | Install |
-|------|---------|
-| Node.js 18+ | [nodejs.org](https://nodejs.org/) |
-| Firebase CLI | `npm i -g firebase-tools` |
-| Shopify CLI *(optional)* | `npm i -g @shopify/cli` |
+| Tool | Install | Auto-installed? |
+|------|---------|----------------|
+| Node.js 18+ | [nodejs.org](https://nodejs.org/) | Required |
+| Firebase CLI | `npm i -g firebase-tools` | Yes, installed automatically if missing |
+| Shopify CLI | `npm i -g @shopify/cli` | Yes, installed automatically if missing |
 
 ### 1. Create your Shopify app
 

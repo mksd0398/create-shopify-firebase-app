@@ -6,6 +6,8 @@ on:
 
 jobs:
   publish:
+    # Only run in the original repo — forks cannot publish
+    if: github.repository == 'mksd0398/create-shopify-firebase-app'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -15,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
       - name: Check if version needs publishing

@@ -1,6 +1,7 @@
 {
   "hosting": {
     "public": "web",
+    "cleanUrls": true,
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       { "source": "/auth", "run": { "serviceId": "auth", "region": "us-central1" } },

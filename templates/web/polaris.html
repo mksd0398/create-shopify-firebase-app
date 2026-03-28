@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Components - {{APP_NAME}}</title>
+  <link rel="stylesheet" href="/css/app.css">
+  <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
+</head>
+<body>
+  <ui-nav-menu>
+    <a href="/" rel="home">Dashboard</a>
+    <a href="/products">Products</a>
+    <a href="/settings">Settings</a>
+    <a href="/polaris">Components</a>
+  </ui-nav-menu>
+
+  <ui-title-bar title="Component Reference"></ui-title-bar>
+
+  <div class="page page-wide">
+    <!-- Intro banner -->
+    <div class="card" style="border-left: 4px solid var(--p-color-primary);">
+      <h2>UI Component Reference</h2>
+      <p>A catalog of all available UI components styled to match the Shopify admin. Copy code snippets directly into your pages. Each component uses the Polaris-inspired CSS classes from <code>app.css</code>.</p>
+    </div>
+
+    <!-- Table of contents -->
+    <div class="card">
+      <h2>Quick Navigation</h2>
+      <div class="flex flex-wrap gap-2 mt-3">
+        <a href="#section-buttons" class="btn btn-sm">Buttons</a>
+        <a href="#section-badges" class="btn btn-sm">Badges</a>
+        <a href="#section-cards" class="btn btn-sm">Cards</a>
+        <a href="#section-forms" class="btn btn-sm">Forms</a>
+        <a href="#section-tables" class="btn btn-sm">Tables</a>
+        <a href="#section-banners" class="btn btn-sm">Banners</a>
+        <a href="#section-empty-state" class="btn btn-sm">Empty State</a>
+        <a href="#section-loading" class="btn btn-sm">Loading</a>
+        <a href="#section-modals" class="btn btn-sm">Modals</a>
+        <a href="#section-toasts" class="btn btn-sm">Toasts</a>
+        <a href="#section-layout" class="btn btn-sm">Layout</a>
+        <a href="#section-resource-picker" class="btn btn-sm">Resource Picker</a>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 1: BUTTONS                                         -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-buttons">
+      <h2 class="demo-section-title">Buttons</h2>
+
+      <!-- Primary, Secondary, Destructive -->
+      <div class="demo-block">
+        <div class="demo-block-title">Button Variants</div>
+        <p class="demo-description mt-3">Use different button styles to indicate hierarchy and intent.</p>
+        <div class="demo-preview">
+          <div class="btn-group">
+            <button class="btn btn-primary">Primary</button>
+            <button class="btn">Secondary</button>
+            <button class="btn btn-destructive">Destructive</button>
+            <button class="btn btn-outline">Outline</button>
+            <button class="btn btn-plain">Plain</button>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;button class="btn btn-primary"&gt;Primary&lt;/button&gt;
+&lt;button class="btn"&gt;Secondary&lt;/button&gt;
+&lt;button class="btn btn-destructive"&gt;Destructive&lt;/button&gt;
+&lt;button class="btn btn-outline"&gt;Outline&lt;/button&gt;
+&lt;button class="btn btn-plain"&gt;Plain&lt;/button&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Sizes -->
+      <div class="demo-block">
+        <div class="demo-block-title">Button Sizes</div>
+        <div class="demo-preview">
+          <div class="btn-group items-center">
+            <button class="btn btn-primary btn-sm">Small</button>
+            <button class="btn btn-primary">Default</button>
+            <button class="btn btn-primary btn-lg">Large</button>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;button class="btn btn-primary btn-sm"&gt;Small&lt;/button&gt;
+&lt;button class="btn btn-primary"&gt;Default&lt;/button&gt;
+&lt;button class="btn btn-primary btn-lg"&gt;Large&lt;/button&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Disabled & Loading -->
+      <div class="demo-block">
+        <div class="demo-block-title">Disabled &amp; Loading</div>
+        <div class="demo-preview">
+          <div class="btn-group">
+            <button class="btn btn-primary" disabled>Disabled</button>
+            <button class="btn btn-primary btn-loading">Loading</button>
+            <button class="btn btn-loading">Loading</button>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;button class="btn btn-primary" disabled&gt;Disabled&lt;/button&gt;
+&lt;button class="btn btn-primary btn-loading"&gt;Loading&lt;/button&gt;
+&lt;button class="btn btn-loading"&gt;Loading&lt;/button&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 2: BADGES                                          -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-badges">
+      <h2 class="demo-section-title">Badges</h2>
+
+      <div class="demo-block">
+        <div class="demo-block-title">Badge Variants</div>
+        <p class="demo-description mt-3">Badges communicate status, labels, and metadata in a compact format.</p>
+        <div class="demo-preview">
+          <div class="flex flex-wrap gap-3 items-center">
+            <span class="badge badge-default">Default</span>
+            <span class="badge badge-success">Success</span>
+            <span class="badge badge-warning">Warning</span>
+            <span class="badge badge-critical">Critical</span>
+            <span class="badge badge-info">Info</span>
+            <span class="badge badge-attention">Attention</span>
+            <span class="badge badge-new">New</span>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;span class="badge badge-default"&gt;Default&lt;/span&gt;
+&lt;span class="badge badge-success"&gt;Success&lt;/span&gt;
+&lt;span class="badge badge-warning"&gt;Warning&lt;/span&gt;
+&lt;span class="badge badge-critical"&gt;Critical&lt;/span&gt;
+&lt;span class="badge badge-info"&gt;Info&lt;/span&gt;
+&lt;span class="badge badge-attention"&gt;Attention&lt;/span&gt;
+&lt;span class="badge badge-new"&gt;New&lt;/span&gt;</code></pre>
+        </div>
+      </div>
+
+      <div class="demo-block">
+        <div class="demo-block-title">Badges in Context</div>
+        <div class="demo-preview">
+          <ul class="info-list">
+            <li>
+              <span class="info-list-label">Order #1001</span>
+              <span class="badge badge-success">Fulfilled</span>
+            </li>
+            <li>
+              <span class="info-list-label">Order #1002</span>
+              <span class="badge badge-warning">Pending</span>
+            </li>
+            <li>
+              <span class="info-list-label">Order #1003</span>
+              <span class="badge badge-critical">Cancelled</span>
+            </li>
+          </ul>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;ul class="info-list"&gt;
+  &lt;li&gt;
+    &lt;span class="info-list-label"&gt;Order #1001&lt;/span&gt;
+    &lt;span class="badge badge-success"&gt;Fulfilled&lt;/span&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;span class="info-list-label"&gt;Order #1002&lt;/span&gt;
+    &lt;span class="badge badge-warning"&gt;Pending&lt;/span&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 3: CARDS                                           -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-cards">
+      <h2 class="demo-section-title">Cards</h2>
+
+      <!-- Basic card -->
+      <div class="demo-block">
+        <div class="demo-block-title">Basic Card</div>
+        <p class="demo-description mt-3">Cards are the primary container for content. Use them to group related information.</p>
+        <div class="demo-preview">
+          <div class="card" style="margin-bottom:0;">
+            <h2>Card Title</h2>
+            <p>This is a basic card with a title and body text. Cards automatically get padding, a border, and a subtle shadow.</p>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="card"&gt;
+  &lt;h2&gt;Card Title&lt;/h2&gt;
+  &lt;p&gt;Card body text goes here.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Card with sections -->
+      <div class="demo-block">
+        <div class="demo-block-title">Card with Sections</div>
+        <div class="demo-preview">
+          <div class="card card-flush" style="margin-bottom:0;">
+            <div class="card-section">
+              <h3>Section One</h3>
+              <p>First section content with separated borders.</p>
+            </div>
+            <div class="card-section">
+              <h3>Section Two</h3>
+              <p>Second section, visually separated from the first.</p>
+            </div>
+            <div class="card-section">
+              <h3>Section Three</h3>
+              <p>Third section with its own content area.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="card card-flush"&gt;
+  &lt;div class="card-section"&gt;
+    &lt;h3&gt;Section One&lt;/h3&gt;
+    &lt;p&gt;First section content.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card-section"&gt;
+    &lt;h3&gt;Section Two&lt;/h3&gt;
+    &lt;p&gt;Second section content.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Card with header actions -->
+      <div class="demo-block">
+        <div class="demo-block-title">Card with Header Actions</div>
+        <div class="demo-preview">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-header">
+              <h2>Recent Orders</h2>
+              <button class="btn btn-sm btn-plain">View all</button>
+            </div>
+            <ul class="info-list">
+              <li>
+                <span class="info-list-label">Order #1234</span>
+                <span class="info-list-value">$149.00</span>
+              </li>
+              <li>
+                <span class="info-list-label">Order #1235</span>
+                <span class="info-list-value">$89.50</span>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="card"&gt;
+  &lt;div class="card-header"&gt;
+    &lt;h2&gt;Recent Orders&lt;/h2&gt;
+    &lt;button class="btn btn-sm btn-plain"&gt;View all&lt;/button&gt;
+  &lt;/div&gt;
+  &lt;ul class="info-list"&gt;
+    &lt;li&gt;
+      &lt;span class="info-list-label"&gt;Order #1234&lt;/span&gt;
+      &lt;span class="info-list-value"&gt;$149.00&lt;/span&gt;
+    &lt;/li&gt;
+  &lt;/ul&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Card grid -->
+      <div class="demo-block">
+        <div class="demo-block-title">Card Grid</div>
+        <div class="demo-preview">
+          <div class="card-grid">
+            <div class="card" style="margin-bottom:0;">
+              <h3>Card A</h3>
+              <p>Responsive grid layout for multiple cards.</p>
+            </div>
+            <div class="card" style="margin-bottom:0;">
+              <h3>Card B</h3>
+              <p>Cards automatically wrap on smaller screens.</p>
+            </div>
+            <div class="card" style="margin-bottom:0;">
+              <h3>Card C</h3>
+              <p>Use <code>card-grid</code> for equal-width columns.</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="card-grid"&gt;
+  &lt;div class="card"&gt;
+    &lt;h3&gt;Card A&lt;/h3&gt;
+    &lt;p&gt;Content here.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;div class="card"&gt;
+    &lt;h3&gt;Card B&lt;/h3&gt;
+    &lt;p&gt;Content here.&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 4: FORMS                                           -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-forms">
+      <h2 class="demo-section-title">Forms</h2>
+
+      <!-- Text input -->
+      <div class="demo-block">
+        <div class="demo-block-title">Text Inputs</div>
+        <p class="demo-description mt-3">Standard form inputs with labels, hints, and validation states.</p>
+        <div class="demo-preview">
+          <div class="form-group">
+            <label for="demo-name">Store name</label>
+            <input type="text" class="form-input" id="demo-name" placeholder="My Awesome Store" value="">
+            <p class="form-hint">The public-facing name of your store.</p>
+          </div>
+          <div class="form-group">
+            <label for="demo-email">Email (error state)</label>
+            <input type="email" class="form-input form-input-error" id="demo-email" value="not-valid">
+            <p class="form-error">Please enter a valid email address.</p>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="form-group"&gt;
+  &lt;label for="name"&gt;Store name&lt;/label&gt;
+  &lt;input type="text" class="form-input" id="name"
+    placeholder="My Awesome Store"&gt;
+  &lt;p class="form-hint"&gt;Help text here.&lt;/p&gt;
+&lt;/div&gt;
+
+&lt;!-- Error state --&gt;
+&lt;div class="form-group"&gt;
+  &lt;label for="email"&gt;Email&lt;/label&gt;
+  &lt;input type="email" class="form-input form-input-error"
+    id="email" value="not-valid"&gt;
+  &lt;p class="form-error"&gt;Please enter a valid email.&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Select -->
+      <div class="demo-block">
+        <div class="demo-block-title">Select</div>
+        <div class="demo-preview">
+          <div class="form-group">
+            <label for="demo-country">Country</label>
+            <select class="form-select" id="demo-country">
+              <option value="">Select a country</option>
+              <option value="us">United States</option>
+              <option value="ca">Canada</option>
+              <option value="gb">United Kingdom</option>
+              <option value="au">Australia</option>
+            </select>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="form-group"&gt;
+  &lt;label for="country"&gt;Country&lt;/label&gt;
+  &lt;select class="form-select" id="country"&gt;
+    &lt;option value=""&gt;Select a country&lt;/option&gt;
+    &lt;option value="us"&gt;United States&lt;/option&gt;
+    &lt;option value="ca"&gt;Canada&lt;/option&gt;
+  &lt;/select&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Checkbox & Radio -->
+      <div class="demo-block">
+        <div class="demo-block-title">Checkboxes &amp; Radios</div>
+        <div class="demo-preview">
+          <div class="form-group">
+            <label class="form-checkbox">
+              <input type="checkbox" checked>
+              <span>Enable email notifications</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="form-checkbox">
+              <input type="checkbox">
+              <span>Subscribe to newsletter</span>
+            </label>
+          </div>
+          <hr class="divider">
+          <div class="form-group">
+            <label class="form-checkbox">
+              <input type="radio" name="demo-radio" value="option1" checked>
+              <span>Option A</span>
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="form-checkbox">
+              <input type="radio" name="demo-radio" value="option2">
+              <span>Option B</span>
+            </label>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;label class="form-checkbox"&gt;
+  &lt;input type="checkbox" checked&gt;
+  &lt;span&gt;Enable notifications&lt;/span&gt;
+&lt;/label&gt;
+
+&lt;label class="form-checkbox"&gt;
+  &lt;input type="radio" name="group" value="a" checked&gt;
+  &lt;span&gt;Option A&lt;/span&gt;
+&lt;/label&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Textarea -->
+      <div class="demo-block">
+        <div class="demo-block-title">Textarea</div>
+        <div class="demo-preview">
+          <div class="form-group">
+            <label for="demo-notes">Order notes</label>
+            <textarea class="form-textarea" id="demo-notes" rows="4" placeholder="Add any notes about this order..."></textarea>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="form-group"&gt;
+  &lt;label for="notes"&gt;Order notes&lt;/label&gt;
+  &lt;textarea class="form-textarea" id="notes"
+    rows="4" placeholder="Add notes..."&gt;&lt;/textarea&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 5: TABLES                                          -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-tables">
+      <h2 class="demo-section-title">Tables</h2>
+
+      <div class="demo-block">
+        <div class="demo-block-title">Data Table</div>
+        <p class="demo-description mt-3">Tables display structured data with alternating row hover and action buttons.</p>
+        <div class="demo-preview">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>SKU</th>
+                  <th>Price</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Classic Leather Jacket</strong></td>
+                  <td><code>CLJ-001</code></td>
+                  <td>$249.00</td>
+                  <td><span class="badge badge-success">Active</span></td>
+                  <td><div class="table-actions"><button class="btn btn-sm">Edit</button><button class="btn btn-sm btn-plain">Delete</button></div></td>
+                </tr>
+                <tr>
+                  <td><strong>Wool Scarf</strong></td>
+                  <td><code>WS-042</code></td>
+                  <td>$59.00</td>
+                  <td><span class="badge badge-success">Active</span></td>
+                  <td><div class="table-actions"><button class="btn btn-sm">Edit</button><button class="btn btn-sm btn-plain">Delete</button></div></td>
+                </tr>
+                <tr>
+                  <td><strong>Running Shoes</strong></td>
+                  <td><code>RS-118</code></td>
+                  <td>$129.00</td>
+                  <td><span class="badge badge-warning">Draft</span></td>
+                  <td><div class="table-actions"><button class="btn btn-sm">Edit</button><button class="btn btn-sm btn-plain">Delete</button></div></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="table-container"&gt;
+  &lt;table&gt;
+    &lt;thead&gt;
+      &lt;tr&gt;
+        &lt;th&gt;Product&lt;/th&gt;
+        &lt;th&gt;SKU&lt;/th&gt;
+        &lt;th&gt;Price&lt;/th&gt;
+        &lt;th&gt;Status&lt;/th&gt;
+        &lt;th&gt;Actions&lt;/th&gt;
+      &lt;/tr&gt;
+    &lt;/thead&gt;
+    &lt;tbody&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;strong&gt;Product Name&lt;/strong&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;code&gt;SKU-001&lt;/code&gt;&lt;/td&gt;
+        &lt;td&gt;$99.00&lt;/td&gt;
+        &lt;td&gt;&lt;span class="badge badge-success"&gt;Active&lt;/span&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;div class="table-actions"&gt;
+            &lt;button class="btn btn-sm"&gt;Edit&lt;/button&gt;
+          &lt;/div&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/tbody&gt;
+  &lt;/table&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Sortable headers -->
+      <div class="demo-block">
+        <div class="demo-block-title">Sortable Table Headers</div>
+        <div class="demo-preview">
+          <div class="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th class="sortable">Name</th>
+                  <th class="sortable">Date</th>
+                  <th class="sortable">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Alice Johnson</td><td>Mar 15, 2026</td><td>$1,240.00</td></tr>
+                <tr><td>Bob Smith</td><td>Mar 12, 2026</td><td>$890.50</td></tr>
+                <tr><td>Carol White</td><td>Mar 10, 2026</td><td>$2,100.00</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;th class="sortable"&gt;Name&lt;/th&gt;
+&lt;th class="sortable"&gt;Date&lt;/th&gt;
+&lt;th class="sortable"&gt;Amount&lt;/th&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 6: BANNERS                                         -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-banners">
+      <h2 class="demo-section-title">Banners</h2>
+
+      <div class="demo-block">
+        <div class="demo-block-title">Banner Variants</div>
+        <p class="demo-description mt-3">Use banners to communicate important information, status, or errors.</p>
+        <div class="demo-preview" id="banners-preview">
+          <div class="banner banner-info">
+            <div class="banner-icon">&#8505;</div>
+            <div class="banner-content">
+              <p><strong>Information</strong></p>
+              <p>This is an informational banner. Use it for tips or neutral messages.</p>
+            </div>
+            <button class="banner-dismiss" onclick="this.closest('.banner').remove()">&times;</button>
+          </div>
+
+          <div class="banner banner-success">
+            <div class="banner-icon">&#10003;</div>
+            <div class="banner-content">
+              <p><strong>Success</strong></p>
+              <p>The operation completed successfully. Your changes have been saved.</p>
+            </div>
+            <button class="banner-dismiss" onclick="this.closest('.banner').remove()">&times;</button>
+          </div>
+
+          <div class="banner banner-warning">
+            <div class="banner-icon">&#9888;</div>
+            <div class="banner-content">
+              <p><strong>Warning</strong></p>
+              <p>This action may have unintended consequences. Please review before proceeding.</p>
+            </div>
+            <button class="banner-dismiss" onclick="this.closest('.banner').remove()">&times;</button>
+          </div>
+
+          <div class="banner banner-critical">
+            <div class="banner-icon">&#10006;</div>
+            <div class="banner-content">
+              <p><strong>Error</strong></p>
+              <p>Something went wrong. Please try again or contact support.</p>
+            </div>
+            <button class="banner-dismiss" onclick="this.closest('.banner').remove()">&times;</button>
+          </div>
+
+          <button class="btn btn-sm mt-3" onclick="resetBanners()">Reset banners</button>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="banner banner-info"&gt;
+  &lt;div class="banner-icon"&gt;&amp;#8505;&lt;/div&gt;
+  &lt;div class="banner-content"&gt;
+    &lt;p&gt;&lt;strong&gt;Information&lt;/strong&gt;&lt;/p&gt;
+    &lt;p&gt;Your message here.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;button class="banner-dismiss"
+    onclick="this.closest('.banner').remove()"&gt;&amp;times;&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Variants: banner-info, banner-success,
+     banner-warning, banner-critical --&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 7: EMPTY STATE                                     -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-empty-state">
+      <h2 class="demo-section-title">Empty State</h2>
+
+      <div class="demo-block">
+        <div class="demo-block-title">Empty State with CTA</div>
+        <p class="demo-description mt-3">Show an empty state when there is no data to display. Include a clear call to action.</p>
+        <div class="demo-preview">
+          <div class="empty-state">
+            <div class="empty-state-icon">&#128230;</div>
+            <h3>No orders yet</h3>
+            <p>When customers place orders, they will appear here. Start by adding products to your store.</p>
+            <button class="btn btn-primary">Add product</button>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="empty-state"&gt;
+  &lt;div class="empty-state-icon"&gt;&amp;#128230;&lt;/div&gt;
+  &lt;h3&gt;No orders yet&lt;/h3&gt;
+  &lt;p&gt;Your description text here.&lt;/p&gt;
+  &lt;button class="btn btn-primary"&gt;Add product&lt;/button&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 8: LOADING                                         -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-loading">
+      <h2 class="demo-section-title">Loading</h2>
+
+      <!-- Spinner -->
+      <div class="demo-block">
+        <div class="demo-block-title">Spinners</div>
+        <p class="demo-description mt-3">Animated spinners indicate an ongoing process.</p>
+        <div class="demo-preview">
+          <div class="flex items-center gap-5">
+            <div>
+              <div class="spinner"></div>
+              <p class="text-sm text-secondary mt-2">Default</p>
+            </div>
+            <div>
+              <div class="spinner spinner-lg"></div>
+              <p class="text-sm text-secondary mt-2">Large</p>
+            </div>
+            <div class="loading-state" style="padding: 20px;">
+              <div class="spinner"></div>
+              <p>Loading content...</p>
+            </div>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="spinner"&gt;&lt;/div&gt;
+&lt;div class="spinner spinner-lg"&gt;&lt;/div&gt;
+
+&lt;!-- Full loading state --&gt;
+&lt;div class="loading-state"&gt;
+  &lt;div class="spinner"&gt;&lt;/div&gt;
+  &lt;p&gt;Loading content...&lt;/p&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Skeleton -->
+      <div class="demo-block">
+        <div class="demo-block-title">Skeleton Loaders</div>
+        <p class="demo-description mt-3">Skeleton loaders provide a placeholder preview of content while it loads.</p>
+        <div class="demo-preview">
+          <div class="card" style="margin-bottom:0;">
+            <div class="skeleton skeleton-heading"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text"></div>
+            <div class="skeleton skeleton-text" style="width: 40%;"></div>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="skeleton skeleton-heading"&gt;&lt;/div&gt;
+&lt;div class="skeleton skeleton-text"&gt;&lt;/div&gt;
+&lt;div class="skeleton skeleton-text"&gt;&lt;/div&gt;
+&lt;div class="skeleton skeleton-text"
+  style="width: 40%;"&gt;&lt;/div&gt;
+
+&lt;!-- Image skeleton --&gt;
+&lt;div class="skeleton skeleton-image"&gt;&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 9: MODALS                                          -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-modals">
+      <h2 class="demo-section-title">Modals</h2>
+
+      <div class="demo-block">
+        <div class="demo-block-title">Basic Modal</div>
+        <p class="demo-description mt-3">App Bridge modals are rendered by Shopify outside your iframe for a native feel. Use <code>&lt;ui-modal&gt;</code>.</p>
+        <div class="demo-preview">
+          <button class="btn btn-primary" onclick="document.getElementById('demo-modal-basic').show()">Open Modal</button>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;ui-modal id="my-modal"&gt;
+  &lt;div style="padding: 16px;"&gt;
+    &lt;p&gt;Modal content goes here.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;ui-title-bar title="Modal Title"&gt;
+    &lt;button variant="primary"
+      onclick="document.getElementById('my-modal').hide()"&gt;
+      Done
+    &lt;/button&gt;
+  &lt;/ui-title-bar&gt;
+&lt;/ui-modal&gt;
+
+&lt;!-- Trigger --&gt;
+&lt;button onclick="document.getElementById('my-modal').show()"&gt;
+  Open Modal
+&lt;/button&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Confirmation dialog -->
+      <div class="demo-block">
+        <div class="demo-block-title">Confirmation Dialog</div>
+        <p class="demo-description mt-3">Use a confirmation modal before destructive actions like deleting records.</p>
+        <div class="demo-preview">
+          <button class="btn btn-destructive" onclick="document.getElementById('demo-modal-confirm').show()">Delete Item</button>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;ui-modal id="confirm-delete"&gt;
+  &lt;div style="padding: 16px;"&gt;
+    &lt;p&gt;Are you sure you want to delete this item?
+      This action cannot be undone.&lt;/p&gt;
+  &lt;/div&gt;
+  &lt;ui-title-bar title="Confirm Deletion"&gt;
+    &lt;button onclick="document.getElementById('confirm-delete').hide()"&gt;
+      Cancel
+    &lt;/button&gt;
+    &lt;button variant="primary" tone="critical"
+      onclick="handleDelete()"&gt;
+      Delete
+    &lt;/button&gt;
+  &lt;/ui-title-bar&gt;
+&lt;/ui-modal&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- Demo modals (rendered outside the demo blocks) -->
+    <ui-modal id="demo-modal-basic">
+      <div style="padding: 16px;">
+        <h3 style="margin-bottom: 12px;">Hello from a modal!</h3>
+        <p>This is an App Bridge modal rendered by Shopify. It appears outside your app's iframe for a seamless, native experience.</p>
+        <p style="margin-top: 12px; color: var(--p-color-text-secondary);">Modals are great for forms, confirmations, and displaying details without navigating away.</p>
+      </div>
+      <ui-title-bar title="Basic Modal">
+        <button variant="primary" onclick="document.getElementById('demo-modal-basic').hide()">Done</button>
+      </ui-title-bar>
+    </ui-modal>
+
+    <ui-modal id="demo-modal-confirm">
+      <div style="padding: 16px;">
+        <p>Are you sure you want to delete this item? This action cannot be undone.</p>
+      </div>
+      <ui-title-bar title="Confirm Deletion">
+        <button onclick="document.getElementById('demo-modal-confirm').hide()">Cancel</button>
+        <button variant="primary" tone="critical" onclick="demoConfirmDelete()">Delete</button>
+      </ui-title-bar>
+    </ui-modal>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 10: TOASTS                                         -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-toasts">
+      <h2 class="demo-section-title">Toasts</h2>
+
+      <div class="demo-block">
+        <div class="demo-block-title">Toast Notifications</div>
+        <p class="demo-description mt-3">Toasts provide brief, non-blocking feedback. In embedded admin, they use App Bridge. Outside, a CSS fallback renders.</p>
+        <div class="demo-preview">
+          <div class="btn-group">
+            <button class="btn btn-primary" onclick="showToast('Product saved successfully')">Success Toast</button>
+            <button class="btn btn-destructive" onclick="showToast('Failed to save product', true)">Error Toast</button>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>JavaScript</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>// Success toast
+showToast("Product saved successfully");
+
+// Error toast
+showToast("Failed to save product", true);
+
+// App Bridge native API (also works)
+shopify.toast.show("Message", { duration: 5000 });</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 11: LAYOUT                                         -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-layout">
+      <h2 class="demo-section-title">Layout</h2>
+
+      <!-- Page layout -->
+      <div class="demo-block">
+        <div class="demo-block-title">Page Widths</div>
+        <p class="demo-description mt-3">Three page width options to match your content needs.</p>
+        <div class="demo-preview">
+          <div style="font-size: 13px; display: flex; flex-direction: column; gap: 8px;">
+            <div style="background: var(--p-color-bg-info); padding: 8px 12px; border-radius: 6px; max-width: 720px; margin: 0 auto; width: 100%; text-align: center;">
+              <code>.page-narrow</code> - 720px max
+            </div>
+            <div style="background: var(--p-color-bg-success); padding: 8px 12px; border-radius: 6px; max-width: 960px; margin: 0 auto; width: 100%; text-align: center;">
+              <code>.page</code> - 960px max (default)
+            </div>
+            <div style="background: var(--p-color-bg-warning); padding: 8px 12px; border-radius: 6px; max-width: 100%; text-align: center;">
+              <code>.page-wide</code> - 1200px max
+            </div>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="page"&gt;Default width (960px)&lt;/div&gt;
+&lt;div class="page-narrow"&gt;Narrow (720px)&lt;/div&gt;
+&lt;div class="page-wide"&gt;Wide (1200px)&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Stats grid -->
+      <div class="demo-block">
+        <div class="demo-block-title">Stats Grid</div>
+        <div class="demo-preview">
+          <div class="stats-grid" style="margin-bottom: 0;">
+            <div class="stat-card" style="margin-bottom:0;">
+              <div class="stat-label">Total Sales</div>
+              <div class="stat-value">$12,450</div>
+              <div class="stat-change stat-change-positive">+12.5%</div>
+            </div>
+            <div class="stat-card" style="margin-bottom:0;">
+              <div class="stat-label">Orders</div>
+              <div class="stat-value">156</div>
+              <div class="stat-change stat-change-positive">+8.2%</div>
+            </div>
+            <div class="stat-card" style="margin-bottom:0;">
+              <div class="stat-label">Visitors</div>
+              <div class="stat-value">3,842</div>
+              <div class="stat-change stat-change-negative">-2.1%</div>
+            </div>
+            <div class="stat-card" style="margin-bottom:0;">
+              <div class="stat-label">Conversion</div>
+              <div class="stat-value">4.1%</div>
+              <div class="stat-change stat-change-positive">+0.3%</div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="stats-grid"&gt;
+  &lt;div class="stat-card"&gt;
+    &lt;div class="stat-label"&gt;Total Sales&lt;/div&gt;
+    &lt;div class="stat-value"&gt;$12,450&lt;/div&gt;
+    &lt;div class="stat-change stat-change-positive"&gt;
+      +12.5%
+    &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;!-- More stat cards... --&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Flex utilities -->
+      <div class="demo-block">
+        <div class="demo-block-title">Flex Utilities</div>
+        <div class="demo-preview">
+          <div class="flex items-center justify-between p-3" style="background: var(--p-color-bg-surface-hover); border-radius: 8px; margin-bottom: 8px;">
+            <span>justify-between</span>
+            <button class="btn btn-sm">Action</button>
+          </div>
+          <div class="flex items-center justify-center gap-3 p-3" style="background: var(--p-color-bg-surface-hover); border-radius: 8px; margin-bottom: 8px;">
+            <span>justify-center + gap-3</span>
+            <span class="badge badge-info">Centered</span>
+          </div>
+          <div class="flex flex-wrap gap-2 p-3" style="background: var(--p-color-bg-surface-hover); border-radius: 8px;">
+            <span class="badge badge-default">flex-wrap</span>
+            <span class="badge badge-default">gap-2</span>
+            <span class="badge badge-default">wraps</span>
+            <span class="badge badge-default">on</span>
+            <span class="badge badge-default">smaller</span>
+            <span class="badge badge-default">screens</span>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="flex items-center justify-between"&gt;
+  &lt;span&gt;Label&lt;/span&gt;
+  &lt;button class="btn btn-sm"&gt;Action&lt;/button&gt;
+&lt;/div&gt;
+
+&lt;!-- Available: flex, flex-col, flex-wrap,
+     items-center, items-start,
+     justify-between, justify-center, justify-end,
+     gap-1 through gap-5 --&gt;</code></pre>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="demo-block">
+        <div class="demo-block-title">Quick Links</div>
+        <div class="demo-preview">
+          <div class="quick-links">
+            <a class="quick-link" href="#">
+              <div class="quick-link-icon">&#128722;</div>
+              <div class="quick-link-text">
+                <h4>Products</h4>
+                <p>Manage inventory</p>
+              </div>
+            </a>
+            <a class="quick-link" href="#">
+              <div class="quick-link-icon">&#128176;</div>
+              <div class="quick-link-text">
+                <h4>Orders</h4>
+                <p>View recent orders</p>
+              </div>
+            </a>
+            <a class="quick-link" href="#">
+              <div class="quick-link-icon">&#9881;</div>
+              <div class="quick-link-text">
+                <h4>Settings</h4>
+                <p>Configure your app</p>
+              </div>
+            </a>
+          </div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>HTML</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>&lt;div class="quick-links"&gt;
+  &lt;a class="quick-link" href="/products"&gt;
+    &lt;div class="quick-link-icon"&gt;&amp;#128722;&lt;/div&gt;
+    &lt;div class="quick-link-text"&gt;
+      &lt;h4&gt;Products&lt;/h4&gt;
+      &lt;p&gt;Manage inventory&lt;/p&gt;
+    &lt;/div&gt;
+  &lt;/a&gt;
+&lt;/div&gt;</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <!-- SECTION 12: RESOURCE PICKER                                -->
+    <!-- ═══════════════════════════════════════════════════════════ -->
+    <div class="demo-section" id="section-resource-picker">
+      <h2 class="demo-section-title">Resource Picker</h2>
+
+      <div class="demo-block">
+        <div class="demo-block-title">Product Resource Picker</div>
+        <p class="demo-description mt-3">App Bridge provides a native product picker. Only available when running inside the Shopify admin.</p>
+        <div class="demo-preview">
+          <button class="btn btn-primary" onclick="demoResourcePicker()">Open Product Picker</button>
+          <div id="picker-demo-result" class="mt-4"></div>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>JavaScript</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>// Open the product resource picker
+const selected = await shopify.resourcePicker({
+  type: "product",
+  // Optional: allow multiple selection
+  // multiple: true,
+  // Optional: filter
+  // filter: { query: "shirt" },
+});
+
+if (selected &amp;&amp; selected.length &gt; 0) {
+  console.log("Selected:", selected);
+  selected.forEach(product =&gt; {
+    console.log(product.title, product.id);
+  });
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- API fetch pattern -->
+      <div class="demo-block">
+        <div class="demo-block-title">API Fetch Pattern</div>
+        <p class="demo-description mt-3">Use the <code>apiFetch()</code> helper for all API calls. It handles session tokens automatically.</p>
+        <div class="demo-preview">
+          <button class="btn" onclick="demoApiFetch()">Test API Call</button>
+        </div>
+        <div class="demo-code">
+          <div class="code-block-header">
+            <span>JavaScript</span>
+            <button class="btn-copy" onclick="copyCode(this)">Copy</button>
+          </div>
+          <pre><code>// GET request
+const shopData = await apiFetch("/api/shop");
+
+// POST request with body
+await apiFetch("/api/settings", {
+  method: "POST",
+  body: JSON.stringify({
+    settings: { greeting: "Hello!" }
+  }),
+});
+
+// Search with query params
+const results = await apiFetch(
+  "/api/products/search?q=" + encodeURIComponent(term)
+);
+
+// Error handling
+try {
+  const data = await apiFetch("/api/shop");
+  showToast("Success!");
+} catch (err) {
+  showToast("Error: " + err.message, true);
+}</code></pre>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Footer -->
+    <div class="card text-center" style="margin-top: 32px;">
+      <p class="text-secondary text-sm">Built with the Shopify App Bridge + Firebase Hosting scaffold. Edit <code>web/css/app.css</code> to customize these components.</p>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/pages/polaris-demo.js"></script>
+</body>
+</html>

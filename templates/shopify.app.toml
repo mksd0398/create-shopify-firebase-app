@@ -22,7 +22,7 @@ api_version = "2026-01"
   topics = [ "app/uninstalled" ]
   uri = "{{APP_URL}}/webhooks"
 
-  # GDPR mandatory webhooks (handled automatically by Shopify via compliance endpoints)
+  # GDPR mandatory webhooks
   [webhooks.privacy_compliance]
   customer_deletion_url = "{{APP_URL}}/webhooks"
   customer_data_request_url = "{{APP_URL}}/webhooks"

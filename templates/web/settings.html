@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings - {{APP_NAME}}</title>
+  <link rel="stylesheet" href="/css/app.css">
+  <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
+</head>
+<body>
+  <ui-nav-menu>
+    <a href="/" rel="home">Dashboard</a>
+    <a href="/products">Products</a>
+    <a href="/settings">Settings</a>
+    <a href="/polaris">Components</a>
+  </ui-nav-menu>
+
+  <ui-title-bar title="Settings">
+    <button variant="primary" onclick="saveSettings()">Save</button>
+  </ui-title-bar>
+
+  <ui-save-bar id="save-bar">
+    <button id="save-btn" variant="primary"></button>
+    <button id="discard-btn"></button>
+  </ui-save-bar>
+
+  <div class="page page-narrow">
+    <!-- Settings form -->
+    <div id="settings-container">
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading settings...</p>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/app.js"></script>
+  <script src="/js/pages/settings.js"></script>
+</body>
+</html>

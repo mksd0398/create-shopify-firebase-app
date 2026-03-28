@@ -1,0 +1,24 @@
+{
+  "name": "shopify-firebase-functions",
+  "private": true,
+  "main": "src/index.js",
+  "engines": {
+    "node": "20"
+  },
+  "scripts": {
+    "serve": "firebase emulators:start --only functions,firestore",
+    "deploy": "firebase deploy --only functions",
+    "deploy:auth": "firebase deploy --only functions:auth",
+    "deploy:api": "firebase deploy --only functions:api",
+    "deploy:webhooks": "firebase deploy --only functions:webhooks",
+    "deploy:proxy": "firebase deploy --only functions:proxy",
+    "deploy:all": "firebase deploy"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.0",
+    "firebase-admin": "^13.0.0",
+    "firebase-functions": "^6.3.0",
+    "jsonwebtoken": "^9.0.2"
+  }
+}

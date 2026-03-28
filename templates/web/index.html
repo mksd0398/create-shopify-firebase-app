@@ -1,64 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{APP_NAME}}</title>
-  <link rel="stylesheet" href="/css/app.css" />
-  <!-- App Bridge: data-api-key must match your Shopify app's client_id -->
-  <script
-    data-api-key="{{API_KEY}}"
-    src="https://cdn.shopify.com/shopifycloud/app-bridge.js"
-  ></script>
-  <script src="/js/bridge.js"></script>
+  <link rel="stylesheet" href="/css/app.css">
+  <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
 </head>
 <body>
-  <div class="app-page" id="app">
-    <div class="loading-overlay" id="loading">
-      <div class="spinner"></div> Loading...
+  <ui-nav-menu>
+    <a href="/" rel="home">Dashboard</a>
+    <a href="/products">Products</a>
+    <a href="/settings">Settings</a>
+    <a href="/polaris">Components</a>
+  </ui-nav-menu>
+
+  <ui-title-bar title="Dashboard"></ui-title-bar>
+
+  <div class="page">
+    <!-- Welcome banner -->
+    <div class="card" style="border-left: 4px solid var(--p-color-primary);">
+      <h2>Welcome to {{APP_NAME}}</h2>
+      <p>Your app is running on Firebase Hosting and embedded in the Shopify admin. Edit the files in <code>web/</code> to build your app.</p>
+    </div>
+
+    <!-- Store info -->
+    <div class="card" id="shop-info">
+      <div class="card-header">
+        <h2>Store Information</h2>
+        <span class="badge badge-success" id="shop-status" style="display:none;">Connected</span>
+      </div>
+      <div id="shop-info-content">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <p>Loading store info...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Stats row -->
+    <div class="stats-grid" id="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">Products</div>
+        <div class="stat-value" id="stat-products">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Store Plan</div>
+        <div class="stat-value" id="stat-plan">--</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">App Status</div>
+        <div class="stat-value" style="color: var(--p-color-text-success);">Active</div>
+      </div>
+    </div>
+
+    <!-- Quick links -->
+    <div class="card">
+      <h2>Quick Links</h2>
+      <div class="quick-links mt-4">
+        <a class="quick-link" onclick="navigateTo('/products'); return false;" href="/products">
+          <div class="quick-link-icon">&#128722;</div>
+          <div class="quick-link-text">
+            <h4>Products</h4>
+            <p>Search and browse products</p>
+          </div>
+        </a>
+        <a class="quick-link" onclick="navigateTo('/settings'); return false;" href="/settings">
+          <div class="quick-link-icon">&#9881;</div>
+          <div class="quick-link-text">
+            <h4>Settings</h4>
+            <p>Configure your app</p>
+          </div>
+        </a>
+        <a class="quick-link" onclick="navigateTo('/polaris'); return false;" href="/polaris">
+          <div class="quick-link-icon">&#127912;</div>
+          <div class="quick-link-text">
+            <h4>Components</h4>
+            <p>UI component reference</p>
+          </div>
+        </a>
+      </div>
+    </div>
+
+    <!-- Quick actions -->
+    <div class="card">
+      <h2>Quick Actions</h2>
+      <p>Test your API connection and App Bridge features.</p>
+      <div class="btn-group mt-4">
+        <button class="btn btn-primary" onclick="testApiConnection()">Test API Connection</button>
+        <button class="btn" onclick="showToast('Everything is working!')">Test Toast</button>
+      </div>
     </div>
   </div>
 
-  <script>
-    window.addEventListener("app-ready", async () => {
-      const app = window.App;
-      const container = document.getElementById("app");
-
-      try {
-        const data = await app.apiFetch("/api/shop");
-        render(data.shop);
-      } catch (err) {
-        container.innerHTML = `<div class="card"><p style="color:#d72c0d;">Error: ${err.message}</p></div>`;
-      }
-
-      function render(shop) {
-        container.innerHTML = `
-          <div class="page-header">
-            <h1>Dashboard</h1>
-          </div>
-
-          <div class="card">
-            <h2>Welcome, ${shop?.name || "merchant"}!</h2>
-            <p style="color:#6d7175;">
-              Your app is running on Firebase and embedded in the Shopify admin.
-              Edit <code>web/index.html</code> to build your dashboard.
-            </p>
-          </div>
-
-          <div class="card">
-            <h2>Quick Test</h2>
-            <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap;">
-              <button class="btn btn-primary" onclick="App.apiFetch('/api/products/search?q=').then(d => App.showToast(d.products.length + ' products found'))">
-                Search Products
-              </button>
-              <button class="btn" onclick="App.showToast('Everything works!')">
-                Test Toast
-              </button>
-            </div>
-          </div>
-        `;
-      }
-    });
-  </script>
+  <script src="/js/app.js"></script>
+  <script src="/js/pages/home.js"></script>
 </body>
 </html>

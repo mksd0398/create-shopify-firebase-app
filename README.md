@@ -86,19 +86,15 @@ The interactive CLI guides you through everything — creating your Shopify app,
   === Shopify Setup ===
 
   ? How would you like to connect your Shopify app?
-    ❯ Create a new app — we'll guide you through it
-      I already have an app — enter my credentials
+    ❯ Create a new app via Shopify CLI
+      Link an existing app via Shopify CLI
+      Enter credentials manually (Client ID + Secret)
 
-  ℹ Opening Shopify Partner Dashboard...
-
-  Follow these steps:
-
-    1. Sign in to your Partner account
-    2. Go to Apps → Create app → Create app manually
-    3. Enter app name: My App
-    4. Copy the Client ID and Client Secret
-
-  ? Paste your Client ID (API Key): abc123...
+  ℹ Logging into Shopify CLI...
+  ✔ Logged into Shopify
+  ℹ Creating a new Shopify app...
+    (Shopify CLI handles app creation interactively)
+  ✔ Client ID: abc123...
   ? Paste your Client Secret: ********
   ? What API access does your app need?
     ❯ Read products            read_products

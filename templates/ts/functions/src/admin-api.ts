@@ -53,15 +53,29 @@ adminApiRouter.get("/shop", async (req: Request, res: Response) => {
               currencyCode
               ianaTimezone
               billingAddress { country countryCodeV2 }
-              productCount: productsCount { count }
             }
+            productCount: productsCount { count }
           }`,
         }),
       },
     );
 
     const data = (await response.json()) as any;
-    res.json({ shop: data.data?.shop });
+
+    // A GraphQL error still comes back as HTTP 200 with data: null. Without
+    // this check the route answers 200 with an undefined shop and every field
+    // in the UI silently renders as "--".
+    if (!response.ok || data.errors) {
+      console.error("Shop info GraphQL error:", JSON.stringify(data.errors ?? data));
+      res.status(502).json({
+        error: data.errors?.[0]?.message || "Shopify Admin API error",
+      });
+      return;
+    }
+
+    res.json({
+      shop: { ...data.data.shop, productCount: data.data.productCount },
+    });
   } catch (err: any) {
     console.error("Shop info error:", err);
     res.status(500).json({ error: err.message });

@@ -174,7 +174,25 @@ async function handleCallback(req: Request, res: any): Promise<void> {
     const tokenData = (await tokenResponse.json()) as {
       access_token: string;
       scope: string;
+      // Present only for online (per-user) tokens, which expire
+      expires_in?: number;
+      associated_user?: unknown;
     };
+
+    // Offline tokens (shpat_) do not expire; online ones (expires_in set) do.
+    // Record the expiry so a stale token is treated as "not installed" and the
+    // merchant is sent back through OAuth, instead of hitting confusing 401s
+    // from the Admin API.
+    const expiresAt = tokenData.expires_in
+      ? new Date(Date.now() + tokenData.expires_in * 1000).toISOString()
+      : null;
+
+    if (expiresAt) {
+      console.warn(
+        `Received an online access token for ${shop} (expires ${expiresAt}). ` +
+          "Offline tokens are expected for background work.",
+      );
+    }
 
     // Store session in Firestore
     await db
@@ -184,6 +202,8 @@ async function handleCallback(req: Request, res: any): Promise<void> {
         shop,
         accessToken: tokenData.access_token,
         scope: tokenData.scope,
+        expiresAt,
+        isOnline: !!tokenData.associated_user,
         installedAt: new Date().toISOString(),
       });
 
@@ -199,5 +219,15 @@ async function handleCallback(req: Request, res: any): Promise<void> {
 export async function getAccessToken(shop: string): Promise<string | null> {
   const doc = await db.collection("shopSessions").doc(shop).get();
   if (!doc.exists) return null;
-  return doc.data()?.accessToken || null;
+
+  const data = doc.data();
+
+  // An expired online token is worse than no token: it produces 401s from
+  // Shopify rather than a clean "reinstall me" signal.
+  if (data?.expiresAt && new Date(data.expiresAt).getTime() <= Date.now()) {
+    console.warn(`Access token for ${shop} expired at ${data.expiresAt}`);
+    return null;
+  }
+
+  return data?.accessToken || null;
 }

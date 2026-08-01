@@ -10,7 +10,7 @@ adminApiRouter.use(verifySessionToken);
 
 // Shopify API version — update when Shopify releases new versions
 // Docs: https://shopify.dev/docs/api/usage/versioning
-const API_VERSION = "2026-01";
+const API_VERSION = "2026-07";
 
 // Default app settings — returned when no settings are saved yet
 const DEFAULT_SETTINGS = {

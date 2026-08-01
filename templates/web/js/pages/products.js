@@ -1,6 +1,7 @@
 /**
  * Products page logic
  * Search, display product cards, show detail modal, resource picker demo.
+ * Uses Polaris Web Components for all UI rendering.
  */
 
 (function () {
@@ -17,9 +18,10 @@
     resultsCount = document.getElementById("results-count");
 
     if (searchInput) {
-      searchInput.addEventListener("input", debounce(handleSearch, 400));
+      var debouncedSearch = debounce(handleSearch, 400);
+      searchInput.addEventListener("input", debouncedSearch);
+      searchInput.addEventListener("change", debouncedSearch);
 
-      // Search on Enter key
       searchInput.addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
           e.preventDefault();
@@ -35,19 +37,23 @@
 
     if (!query) {
       container.innerHTML =
-        '<div class="card">' +
-        '<div class="empty-state">' +
-        '<div class="empty-state-icon">&#128722;</div>' +
-        "<h3>Search for products</h3>" +
-        "<p>Enter a search term above to find products in your store, or use the Resource Picker to browse.</p>" +
-        '<button class="btn btn-primary" onclick="document.getElementById(\'search-input\').focus()">Start searching</button>' +
-        "</div></div>";
+        '<s-box padding="large-1200" border="base" borderRadius="base">' +
+        '<s-stack alignItems="center" gap="base">' +
+        '<s-text variant="headingMd">Search for products</s-text>' +
+        '<s-text color="subdued">Enter a search term above to find products in your store, or use the Resource Picker to browse.</s-text>' +
+        '<s-button variant="primary" onclick="document.getElementById(\'search-input\').focus()">Start searching</s-button>' +
+        "</s-stack></s-box>";
       if (resultsCount) resultsCount.textContent = "";
       return;
     }
 
-    // Show loading skeleton
-    container.innerHTML = renderSkeletonGrid();
+    // Show loading
+    container.innerHTML =
+      '<s-box padding="large-400">' +
+      '<s-stack alignItems="center" gap="base">' +
+      "<s-spinner></s-spinner>" +
+      '<s-text color="subdued">Searching...</s-text>' +
+      "</s-stack></s-box>";
 
     try {
       var data = await apiFetch("/api/products/search?q=" + encodeURIComponent(query));
@@ -59,24 +65,22 @@
 
       if (products.length === 0) {
         container.innerHTML =
-          '<div class="card">' +
-          '<div class="empty-state">' +
-          '<div class="empty-state-icon">&#128270;</div>' +
-          "<h3>No products found</h3>" +
-          '<p>No products match "' + escapeHtml(query) + '". Try a different search term.</p>' +
-          "</div></div>";
+          '<s-box padding="large-1200" border="base" borderRadius="base">' +
+          '<s-stack alignItems="center" gap="base">' +
+          '<s-text variant="headingMd">No products found</s-text>' +
+          '<s-text color="subdued">No products match "' + escapeHtml(query) + '". Try a different search term.</s-text>' +
+          "</s-stack></s-box>";
         return;
       }
 
       renderProductGrid(products);
     } catch (err) {
       container.innerHTML =
-        '<div class="banner banner-critical">' +
-        '<div class="banner-icon">&#9888;</div>' +
-        '<div class="banner-content">' +
-        "<p><strong>Search failed</strong></p>" +
-        "<p>" + escapeHtml(err.message) + "</p>" +
-        "</div></div>";
+        '<s-banner tone="critical">' +
+        "<s-text>" +
+        "<s-text fontWeight=\"semibold\">Search failed</s-text> " +
+        escapeHtml(err.message) +
+        "</s-text></s-banner>";
       if (resultsCount) resultsCount.textContent = "";
     }
   }
@@ -98,36 +102,19 @@
         '<div class="product-card-image">' +
         (image
           ? '<img src="' + escapeAttr(image) + '" alt="' + escapeAttr(p.title || "") + '" loading="lazy">'
-          : '<span>No image</span>') +
+          : '<s-text color="subdued">No image</s-text>') +
         "</div>" +
         '<div class="product-card-body">' +
-        '<div class="product-card-title">' + escapeHtml(p.title || "Untitled") + "</div>" +
-        (vendor ? '<div class="product-card-vendor">' + escapeHtml(vendor) + "</div>" : "") +
-        '<div class="product-card-meta">' +
-        '<span class="product-card-price">' + escapeHtml(price) + "</span>" +
-        '<span class="badge ' + status.badgeClass + '">' + escapeHtml(status.label) + "</span>" +
-        "</div></div></div>";
+        '<s-text fontWeight="semibold">' + escapeHtml(p.title || "Untitled") + "</s-text>" +
+        (vendor ? '<s-text color="subdued" variant="bodySm">' + escapeHtml(vendor) + "</s-text>" : "") +
+        '<s-stack direction="inline" gap="small-200" alignItems="center" style="margin-top: 8px;">' +
+        '<s-text fontWeight="semibold">' + escapeHtml(price) + "</s-text>" +
+        '<s-badge tone="' + status.tone + '">' + escapeHtml(status.label) + "</s-badge>" +
+        "</s-stack></div></div>";
     }
 
     html += "</div>";
     container.innerHTML = html;
-  }
-
-  // ── Skeleton loading ────────────────────────────────────────────
-  function renderSkeletonGrid() {
-    var html = '<div class="product-grid">';
-    for (var i = 0; i < 6; i++) {
-      html +=
-        '<div class="product-card">' +
-        '<div class="skeleton skeleton-image"></div>' +
-        '<div class="product-card-body">' +
-        '<div class="skeleton skeleton-heading" style="width:80%;"></div>' +
-        '<div class="skeleton skeleton-text" style="width:50%;"></div>' +
-        '<div class="skeleton skeleton-text" style="width:60%;"></div>' +
-        "</div></div>";
-    }
-    html += "</div>";
-    return html;
   }
 
   // ── Show product detail in modal ────────────────────────────────
@@ -136,10 +123,10 @@
     var content = document.getElementById("product-detail-content");
 
     content.innerHTML =
-      '<div class="loading-state">' +
-      '<div class="spinner"></div>' +
-      "<p>Loading product details...</p>" +
-      "</div>";
+      '<s-stack alignItems="center" gap="base">' +
+      "<s-spinner></s-spinner>" +
+      '<s-text color="subdued">Loading product details...</s-text>' +
+      "</s-stack>";
 
     modal.show();
 
@@ -149,19 +136,17 @@
       renderProductDetail(content, p);
     } catch (err) {
       content.innerHTML =
-        '<div class="banner banner-critical">' +
-        '<div class="banner-icon">&#9888;</div>' +
-        '<div class="banner-content">' +
-        "<p><strong>Could not load product</strong></p>" +
-        "<p>" + escapeHtml(err.message) + "</p>" +
-        "</div></div>";
+        '<s-banner tone="critical">' +
+        "<s-text>" +
+        "<s-text fontWeight=\"semibold\">Could not load product</s-text> " +
+        escapeHtml(err.message) +
+        "</s-text></s-banner>";
     }
   };
 
   function renderProductDetail(container, p) {
     var image = getProductImage(p);
     var status = getProductStatus(p);
-    // GraphQL returns variants as { edges: [{ node: {...} }] }
     var variants = [];
     if (p.variants && p.variants.edges) {
       for (var vi = 0; vi < p.variants.edges.length; vi++) {
@@ -171,44 +156,40 @@
       variants = p.variants;
     }
 
-    var html =
-      '<div style="display:grid; grid-template-columns: 200px 1fr; gap: 20px; align-items: start;">';
+    var html = '<s-stack gap="base">';
+
+    // Image + info grid
+    html += '<s-grid gridTemplateColumns="@container (inline-size <= 400px) 1fr, 200px 1fr" gap="base" alignItems="start">';
 
     // Image
-    html += '<div>';
     if (image) {
-      html += '<img src="' + escapeAttr(image) + '" alt="' + escapeAttr(p.title || "") + '" style="width:100%; border-radius: 8px; border: 1px solid var(--p-color-border);">';
+      html += '<img src="' + escapeAttr(image) + '" alt="' + escapeAttr(p.title || "") + '" style="width:100%; border-radius: 8px; border: 1px solid #e1e3e5;">';
     } else {
-      html += '<div style="width:100%; aspect-ratio:1; background: var(--p-color-bg); border-radius: 8px; display:flex; align-items:center; justify-content:center; color: var(--p-color-text-disabled); border: 1px solid var(--p-color-border);">No image</div>';
+      html += '<s-box padding="large-400" border="base" borderRadius="base" background="bg-surface-secondary"><s-stack alignItems="center"><s-text color="subdued">No image</s-text></s-stack></s-box>';
     }
-    html += "</div>";
 
     // Info
-    html += "<div>";
-    html += '<h3 style="font-size: 18px; margin-bottom: 12px;">' + escapeHtml(p.title || "Untitled") + "</h3>";
+    html += '<s-stack gap="small-200">';
+    html += '<s-text variant="headingLg">' + escapeHtml(p.title || "Untitled") + "</s-text>";
+    html += '<s-stack gap="small-200">';
+    html += infoRow("Status", '<s-badge tone="' + status.tone + '">' + escapeHtml(status.label) + "</s-badge>");
+    if (p.vendor) html += infoRow("Vendor", "<s-text>" + escapeHtml(p.vendor) + "</s-text>");
+    if (p.productType) html += infoRow("Type", "<s-text>" + escapeHtml(p.productType) + "</s-text>");
+    html += infoRow("Price", "<s-text>" + escapeHtml(getProductPrice(p)) + "</s-text>");
+    if (p.totalInventory !== undefined) html += infoRow("Total inventory", "<s-text>" + escapeHtml(String(p.totalInventory)) + "</s-text>");
+    html += "</s-stack></s-stack>";
+    html += "</s-grid>";
 
-    html += '<ul class="info-list">';
-    html += infoRow("Status", '<span class="badge ' + status.badgeClass + '">' + escapeHtml(status.label) + "</span>");
-    if (p.vendor) html += infoRow("Vendor", escapeHtml(p.vendor));
-    // GraphQL uses productType (camelCase)
-    if (p.productType) html += infoRow("Type", escapeHtml(p.productType));
-    html += infoRow("Price", escapeHtml(getProductPrice(p)));
-    if (p.totalInventory !== undefined) html += infoRow("Total inventory", String(p.totalInventory));
-    html += "</ul>";
-    html += "</div></div>";
-
-    // Description — GraphQL uses "description" not "body_html"
+    // Description
     var desc = p.description || p.body_html || "";
     if (desc) {
-      html += "<hr class='divider'>";
-      html += '<h3 class="mb-2">Description</h3>';
-      html += '<div class="text-secondary">' + escapeHtml(desc) + "</div>";
+      html += '<s-text variant="headingSm">Description</s-text>';
+      html += '<s-text color="subdued">' + escapeHtml(desc) + "</s-text>";
     }
 
     // Variants table
     if (variants.length > 0) {
-      html += "<hr class='divider'>";
-      html += '<h3 class="mb-3">Variants (' + variants.length + ")</h3>";
+      html += '<s-text variant="headingSm">Variants (' + variants.length + ")</s-text>";
       html += '<div class="table-container"><table>';
       html += "<thead><tr><th>Title</th><th>Price</th><th>SKU</th><th>Inventory</th></tr></thead><tbody>";
       for (var i = 0; i < variants.length; i++) {
@@ -217,21 +198,21 @@
         html += "<td>" + escapeHtml(v.title || "--") + "</td>";
         html += "<td>" + escapeHtml(v.price ? formatCurrency(v.price) : "--") + "</td>";
         html += "<td><code>" + escapeHtml(v.sku || "--") + "</code></td>";
-        // GraphQL uses inventoryQuantity (camelCase)
-        html += "<td>" + (v.inventoryQuantity !== undefined ? v.inventoryQuantity : (v.inventory_quantity !== undefined ? v.inventory_quantity : "--")) + "</td>";
+        html += "<td>" + escapeHtml(String(v.inventoryQuantity !== undefined ? v.inventoryQuantity : (v.inventory_quantity !== undefined ? v.inventory_quantity : "--"))) + "</td>";
         html += "</tr>";
       }
       html += "</tbody></table></div>";
     }
 
+    html += "</s-stack>";
     container.innerHTML = html;
   }
 
   function infoRow(label, valueHtml) {
-    return "<li>" +
-      '<span class="info-list-label">' + escapeHtml(label) + "</span>" +
-      '<span class="info-list-value">' + valueHtml + "</span>" +
-      "</li>";
+    return '<s-grid gridTemplateColumns="120px 1fr" gap="small-200" alignItems="center">' +
+      '<s-text color="subdued">' + escapeHtml(label) + "</s-text>" +
+      valueHtml +
+      "</s-grid>";
   }
 
   // ── Resource Picker ─────────────────────────────────────────────
@@ -252,17 +233,17 @@
       var modal = document.getElementById("picker-result-modal");
       var content = document.getElementById("picker-result-content");
 
-      var html = '<p class="text-secondary mb-3">You selected ' + selected.length + " product(s):</p>";
-      html += '<ul class="info-list">';
+      var html = '<s-stack gap="base">';
+      html += '<s-text color="subdued">You selected ' + selected.length + " product(s):</s-text>";
       for (var i = 0; i < selected.length; i++) {
         var item = selected[i];
-        html += "<li>";
-        html += '<span class="font-semibold">' + escapeHtml(item.title || "Untitled") + "</span>";
-        html += '<span class="badge badge-info">Selected</span>';
-        html += "</li>";
+        html += '<s-stack direction="inline" gap="base" alignItems="center">';
+        html += '<s-text fontWeight="semibold">' + escapeHtml(item.title || "Untitled") + "</s-text>";
+        html += '<s-badge tone="info">Selected</s-badge>';
+        html += "</s-stack>";
       }
-      html += "</ul>";
-      html += '<p class="text-secondary text-sm mt-4">Resource Picker returns product data you can use in your app logic.</p>';
+      html += '<s-text color="subdued" variant="bodySm">Resource Picker returns product data you can use in your app logic.</s-text>';
+      html += "</s-stack>";
 
       content.innerHTML = html;
       modal.show();
@@ -282,6 +263,10 @@
   }
 
   function getProductPrice(product) {
+    if (product.variants && product.variants.edges && product.variants.edges.length > 0) {
+      var price = product.variants.edges[0].node.price;
+      if (price) return formatCurrency(price);
+    }
     if (product.variants && product.variants.length > 0) {
       var price = product.variants[0].price;
       if (price) return formatCurrency(price);
@@ -295,25 +280,17 @@
 
   function getProductStatus(product) {
     var status = (product.status || "").toLowerCase();
-    if (status === "active") return { label: "Active", badgeClass: "badge-success" };
-    if (status === "draft") return { label: "Draft", badgeClass: "badge-default" };
-    if (status === "archived") return { label: "Archived", badgeClass: "badge-warning" };
-    return { label: status || "Active", badgeClass: "badge-success" };
+    if (status === "active") return { label: "Active", tone: "success" };
+    if (status === "draft") return { label: "Draft", tone: "info" };
+    if (status === "archived") return { label: "Archived", tone: "warning" };
+    return { label: status || "Active", tone: "success" };
   }
 
   function extractId(gid) {
-    // Extract numeric ID from GID like "gid://shopify/Product/123"
     if (!gid) return "";
     var parts = String(gid).split("/");
     return parts[parts.length - 1] || gid;
   }
 
-  function escapeAttr(str) {
-    return String(str)
-      .replace(/&/g, "&amp;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#39;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
-  }
+  // escapeAttr is provided globally by app.js
 })();

@@ -11,8 +11,9 @@ npx create-shopify-firebase-app my-app
 ```
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Shopify-2026--01-7AB55C?logo=shopify&logoColor=white" />
+  <img src="https://img.shields.io/badge/Shopify-2026--07-7AB55C?logo=shopify&logoColor=white" />
   <img src="https://img.shields.io/badge/Firebase-v2%20Functions-FFCA28?logo=firebase&logoColor=black" />
+  <img src="https://img.shields.io/badge/Node-22-339933?logo=nodedotjs&logoColor=white" />
   <img src="https://img.shields.io/badge/TypeScript-Functions-3178C6?logo=typescript&logoColor=white" />
 </p>
 
@@ -41,15 +42,18 @@ npx create-shopify-firebase-app my-app
 
 The **Firebase alternative** to `shopify app init`. Instead of Remix + Prisma + Vercel, you get:
 
-- **Firebase v2 Cloud Functions** (gen 2) — 4 independent, auto-scaling TypeScript functions
+- **Firebase v2 Cloud Functions** (gen 2, Node 22) — 4 independent, auto-scaling functions
 - **Cloud Firestore** for sessions and app data (auto-scaling, free tier)
 - **Firebase Hosting** for your embedded admin dashboard (free)
-- **Vanilla HTML/JS + App Bridge** for the frontend (no React, no build step)
+- **Polaris web components + App Bridge** — 4 pages, no React, no build step
 - **Theme App Extension** for storefront UI (works on all Shopify plans)
-- **Shopify API 2026-01** (latest) — OAuth, session tokens, webhooks, GDPR handlers
-- **Production-ready** — deploy with one command, scale to millions
+- **Shopify API 2026-07** — OAuth, session tokens, webhooks, GDPR handlers
+- **Production-ready** — deployed and installable when the command finishes
 
-One `npx` command scaffolds everything, installs dependencies, wires up Firebase, and initializes git. You're ready to `firebase deploy`.
+One command does the whole thing: signs you in to Shopify, creates the app, creates
+and provisions the Firebase project, deploys it, and hands you an install link.
+No copying Client IDs between dashboards, and no pasting your Client Secret — the
+CLI reads it from the Shopify CLI itself.
 
 ---
 
@@ -57,11 +61,22 @@ One `npx` command scaffolds everything, installs dependencies, wires up Firebase
 
 ### Prerequisites
 
-| Tool | Install | Auto-installed? |
-|------|---------|----------------|
-| Node.js 18+ | [nodejs.org](https://nodejs.org/) | Required |
-| Firebase CLI | `npm i -g firebase-tools` | Yes, installed automatically if missing |
-| Shopify CLI | `npm i -g @shopify/cli` | Yes, installed automatically if missing |
+The CLI checks all of these before it does anything, and offers to install what's missing.
+
+| Tool | Install | Required? |
+|------|---------|-----------|
+| Node.js 20+ | [nodejs.org](https://nodejs.org/) | Yes — Cloud Functions run on Node 22 |
+| Firebase CLI | `npm i -g firebase-tools` | Yes — offered automatically if missing |
+| Shopify CLI | `npm i -g @shopify/cli` | Yes — offered automatically if missing |
+| git | [git-scm.com](https://git-scm.com/) | Optional — only for the initial commit |
+| gcloud | [Cloud SDK](https://cloud.google.com/sdk) | Optional — auto-enables the Firestore API |
+
+You also need a **Shopify Partner account** and a **Google account**. The CLI signs
+you in to both; you don't need to open either dashboard first.
+
+> **Cloud Functions require the Firebase Blaze plan.** It has a generous free tier
+> (2M invocations/month), but a billing account must be attached. That is the one
+> step the CLI cannot do silently for you.
 
 ### 1. Run the scaffold
 
@@ -69,86 +84,104 @@ One `npx` command scaffolds everything, installs dependencies, wires up Firebase
 npx create-shopify-firebase-app my-app
 ```
 
-The interactive CLI guides you through everything — creating your Shopify app, setting up Firebase, and wiring it all together:
+The CLI walks the entire flow. This is a real run:
 
 ```
   🛍️  +  🔥  create-shopify-firebase-app
-  Serverless Shopify apps — free until you scale
 
-  === App Configuration ===
+  === Environment Check ===
 
-  ? Project directory name: my-app
-  ? App name (shown in Shopify admin): My App
-  ? What kind of app are you building?
-    ❯ Public app — list on the Shopify App Store
-      Custom app — built for a single store
+  ✔ Node.js        v22.20.0
+  ✔ npm            10.9.4
+  ✔ git            2.47.1
+  ✔ Firebase CLI   15.10.0
+  ✔ Shopify CLI    4.6.0
+  ✔ gcloud         565.0.0
+  ✔ Environment ready
 
-  === Shopify Setup ===
+  === Sign In to Shopify ===
 
-  ? How would you like to connect your Shopify app?
-    ❯ Create a new app via Shopify CLI
-      Link an existing app via Shopify CLI
-      Enter credentials manually (Client ID + Secret)
+  ℹ A browser window opens — approve the code shown below.
+  ✔ Signed in to Shopify
 
-  ℹ Logging into Shopify CLI...
-  ✔ Logged into Shopify
-  ℹ Creating a new Shopify app...
-    (Shopify CLI handles app creation interactively)
-  ✔ Client ID: abc123...
-  ? Paste your Client Secret: ********
-  ? What API access does your app need?
-    ❯ Read products            read_products
-      Read + write products    read_products,write_products
-      Orders + products        read_products,write_products,read_orders,write_orders
-      Custom scopes — enter manually
+  === Choose Your Template ===
+
+  ? What would you like to create?
+    ❯ Shopify + Firebase app (full-stack serverless)
+      Extension-only app (Shopify CLI)
+
+  === Project Setup ===
+
+  ? Language for Cloud Functions        › TypeScript
+  ? App name (shown in Shopify admin)   › My Store App
+  ? What API access does your app need? › read_products
+
+  === Scaffolding ===
+
+  ✔ Created 33 files in my-store-app/
+
+  === Create Your Shopify App ===
+
+    (the Shopify CLI asks which organization, and lets you create a new app)
+  ✔ Client ID:     12dfc4d0d6d0b40d85b0f64b80de28af
+  ✔ Client Secret: shpss_09**************(38 chars)
 
   === Firebase Setup ===
 
-  ℹ Fetching your Firebase projects...
+  ? Which Google account should own this project? › you@gmail.com
   ? Select a Firebase project
     ❯ [create a new project]
       My Project (my-project-123)
-      Another Project (another-456)
+      [add Firebase to an existing Google Cloud project]
       [enter project ID manually]
 
-  === Setting Up ===
+  ✔ Firestore: us-central1
+  ✔ Web App: My Store App
+  ✔ Hosting: https://my-store-app.web.app
+  ✔ Artifact cleanup policy set — 'firebase deploy' will not prompt
+  ✔ App config written — https://my-store-app.web.app
 
-  ℹ Scaffolding project...
-  ✔ Created 27 files in my-app/
-  ℹ Installing dependencies...
+  === Installing & Building ===
+
   ✔ Dependencies installed
-  ℹ Building TypeScript...
   ✔ TypeScript compiled successfully
-  ℹ Setting up Firebase...
-  ✔ Firebase project linked + Firestore provisioned
-  ℹ Checking Shopify CLI...
-  ✔ Shopify CLI detected
-  ℹ Initializing git...
-  ✔ Git repository initialized with first commit
+
+  === Going Live ===
+
+  ✔ Deployed to Firebase
+  ✔ Shopify app updated
 
   ✔  All done! Your Shopify + Firebase app is ready.
 
-  Next steps:
+  Your app is live. Install it on a dev store:
 
-    cd my-app
-    firebase deploy
+    https://my-store-app.web.app/auth?shop=YOUR-STORE.myshopify.com
 ```
 
-No need to visit Firebase Console or Shopify Partner Dashboard beforehand — the CLI guides you through everything.
+**You never paste the Client Secret.** The CLI reads it from `shopify app env show`
+once the app exists — which is exactly why the Shopify app is created *before* Firebase.
 
-### 4. Deploy & Install
+### 2. Install it on a development store
+
+The command prints an install link when it finishes. Open it in a browser with your
+store's domain substituted in:
+
+```
+https://YOUR-PROJECT.web.app/auth?shop=YOUR-STORE.myshopify.com
+```
+
+Approve the scopes and the app opens embedded in the Shopify admin.
+
+### 3. Make changes
 
 ```bash
-cd my-app
-firebase deploy
+cd my-store-app
+# edit web/ or functions/src/
+firebase deploy --force
 ```
 
-Then install on your dev store by visiting:
-```
-https://my-app-12345.web.app/auth?shop=YOUR-STORE.myshopify.com
-```
+Or develop against a Shopify tunnel with hot reload:
 
-Or use Shopify CLI for local development:
 ```bash
 shopify app dev
 ```
@@ -165,11 +198,11 @@ Most Shopify app developers pay for hosting before they even have users. With Fi
 |---|---|---|
 | **Backend** | Remix server (monolith) | Firebase v2 Cloud Functions (4 independent functions) |
 | **Database** | Prisma + PostgreSQL | Cloud Firestore (NoSQL, auto-scaling) |
-| **Frontend** | React + Polaris | Vanilla HTML/JS + App Bridge |
+| **Frontend** | React + Polaris | Polaris web components + App Bridge (no build) |
 | **Hosting** | Vercel / Fly.io / Heroku | Firebase Hosting (free tier) |
-| **Auth** | `@shopify/shopify-app-remix` | Manual OAuth (140 lines, you own it) |
+| **Auth** | `@shopify/shopify-app-react-router` | Manual OAuth (~150 lines, you own it) |
 | **Build** | Webpack / Vite | `tsc` (TypeScript compiler, no bundler) |
-| **Deploy** | Varies | `firebase deploy` (one command) |
+| **Deploy** | Varies | Done for you — the CLI deploys before it exits |
 | **Cost** | $5-25/month from day one | **$0/month** — free until you scale |
 | **Framework knowledge** | Remix + React required | Express + HTML (that's it) |
 | **Scaling** | Single server | Per-function auto-scaling (Cloud Run) |
@@ -197,7 +230,7 @@ Most Shopify app developers pay for hosting before they even have users. With Fi
 
 ```
 my-app/
-├── shopify.app.toml              # Shopify app config (API 2026-01)
+├── shopify.app.toml              # Shopify app config (API 2026-07)
 ├── firebase.json                 # Firebase Hosting + Functions + Firestore
 ├── firestore.rules               # Security rules (blocks direct client access)
 │
@@ -213,10 +246,14 @@ my-app/
 │   │   └── config.ts             # Environment config
 │   └── .env                      # Your secrets (auto-generated, git-ignored)
 │
-├── web/                          # ── Frontend ──
-│   ├── index.html                # Embedded admin dashboard
-│   ├── js/bridge.js              # App Bridge helper (auth, fetch, navigate)
-│   └── css/app.css               # Shopify-like styles
+├── web/                          # ── Frontend (4 pages) ──
+│   ├── index.html                # Dashboard
+│   ├── products.html             # Product search + detail
+│   ├── settings.html             # Form persisted to Firestore
+│   ├── polaris.html              # Polaris component reference
+│   ├── js/app.js                 # App Bridge helper (idToken, apiFetch, toast)
+│   ├── js/pages/                 # One module per page
+│   └── css/app.css               # Supplementary styles
 │
 └── extensions/                   # ── Storefront ──
     └── theme-block/
@@ -285,11 +322,18 @@ npx create-shopify-firebase-app
 # With project name
 npx create-shopify-firebase-app my-app
 
+# Skip the deploy steps (scaffold only)
+npx create-shopify-firebase-app my-app --no-deploy
+
+# Auto-install any missing CLI tools without asking
+npx create-shopify-firebase-app my-app --yes
+
 # Non-interactive (CI/CD)
 npx create-shopify-firebase-app my-app \
   --api-key=abc123 \
   --api-secret=secret \
   --project-id=my-firebase-project \
+  --create-project \
   --scopes=read_products,write_products
 
 # Help
@@ -509,9 +553,13 @@ These are **required** for Shopify App Store listing.
 |---------|----------|
 | "Missing shop parameter" | Set **App URL** in Partner Dashboard to `https://PROJECT_ID.web.app` |
 | "HMAC verification failed" | Check `SHOPIFY_API_SECRET` in `functions/.env` |
-| "Invalid session token" | Verify `data-api-key` in `web/index.html` matches your API key |
+| "Invalid session token" | Check `SHOPIFY_API_SECRET` in `functions/.env` — the JWT is signed with it |
 | Functions not receiving requests | Check `firebase.json` rewrites match function export names in `index.ts` |
 | Webhook failures | Must respond 200 within 5 seconds. Check `firebase functions:log` |
+| `firebase deploy` exits 1 on a new project | Use `firebase deploy --force` — a bare deploy stalls on the artifact-policy prompt and leaves Hosting unreleased |
+| Firestore create fails with 403 | The Firestore API is not enabled yet: `gcloud services enable firestore.googleapis.com --project=YOUR_ID` |
+| `App name cannot contain "Shopify"` | Shopify rejects those names — pick another (the CLI now strips it automatically) |
+| `shopify app deploy` says "not a member of the organization" | The app was created under a different Shopify account. Run `shopify auth login` |
 | Individual function not deploying | Ensure export name in `index.ts` matches function name in `firebase.json` rewrite |
 
 ---

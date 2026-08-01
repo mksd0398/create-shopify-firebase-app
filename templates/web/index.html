@@ -6,6 +6,7 @@
   <title>{{APP_NAME}}</title>
   <link rel="stylesheet" href="/css/app.css">
   <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
+  <script src="https://cdn.shopify.com/shopifycloud/polaris.js"></script>
 </head>
 <body>
   <ui-nav-menu>
@@ -15,83 +16,92 @@
     <a href="/polaris">Components</a>
   </ui-nav-menu>
 
-  <ui-title-bar title="Dashboard"></ui-title-bar>
-
-  <div class="page">
+  <s-page heading="Dashboard">
     <!-- Welcome banner -->
-    <div class="card" style="border-left: 4px solid var(--p-color-primary);">
-      <h2>Welcome to {{APP_NAME}}</h2>
-      <p>Your app is running on Firebase Hosting and embedded in the Shopify admin. Edit the files in <code>web/</code> to build your app.</p>
-    </div>
+    <s-section>
+      <s-banner tone="info">
+        <s-text>Welcome to <s-text fontWeight="semibold">{{APP_NAME}}</s-text>! Your app is running on Firebase Hosting and embedded in the Shopify admin. Edit the files in <code>web/</code> to build your app.</s-text>
+      </s-banner>
+    </s-section>
 
     <!-- Store info -->
-    <div class="card" id="shop-info">
-      <div class="card-header">
-        <h2>Store Information</h2>
-        <span class="badge badge-success" id="shop-status" style="display:none;">Connected</span>
-      </div>
-      <div id="shop-info-content">
-        <div class="loading-state">
-          <div class="spinner"></div>
-          <p>Loading store info...</p>
-        </div>
-      </div>
-    </div>
+    <s-section heading="Store Information">
+      <s-box id="shop-loading" padding="large-400">
+        <s-stack alignItems="center"><s-spinner></s-spinner></s-stack>
+      </s-box>
+      <div id="shop-info-content" style="display:none;"></div>
+    </s-section>
 
     <!-- Stats row -->
-    <div class="stats-grid" id="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">Products</div>
-        <div class="stat-value" id="stat-products">--</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">Store Plan</div>
-        <div class="stat-value" id="stat-plan">--</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">App Status</div>
-        <div class="stat-value" style="color: var(--p-color-text-success);">Active</div>
-      </div>
-    </div>
+    <s-section>
+      <s-grid gridTemplateColumns="@container (inline-size <= 400px) 1fr, 1fr 1fr 1fr" gap="base">
+        <s-box border="base" borderRadius="base" padding="base">
+          <s-stack gap="small-200">
+            <s-text color="subdued">Products</s-text>
+            <s-text id="stat-products" variant="headingLg">--</s-text>
+          </s-stack>
+        </s-box>
+        <s-box border="base" borderRadius="base" padding="base">
+          <s-stack gap="small-200">
+            <s-text color="subdued">Store Plan</s-text>
+            <s-text id="stat-plan" variant="headingLg">--</s-text>
+          </s-stack>
+        </s-box>
+        <s-box border="base" borderRadius="base" padding="base">
+          <s-stack gap="small-200">
+            <s-text color="subdued">App Status</s-text>
+            <s-badge tone="success">Active</s-badge>
+          </s-stack>
+        </s-box>
+      </s-grid>
+    </s-section>
 
     <!-- Quick links -->
-    <div class="card">
-      <h2>Quick Links</h2>
-      <div class="quick-links mt-4">
-        <a class="quick-link" onclick="navigateTo('/products'); return false;" href="/products">
-          <div class="quick-link-icon">&#128722;</div>
-          <div class="quick-link-text">
-            <h4>Products</h4>
-            <p>Search and browse products</p>
-          </div>
-        </a>
-        <a class="quick-link" onclick="navigateTo('/settings'); return false;" href="/settings">
-          <div class="quick-link-icon">&#9881;</div>
-          <div class="quick-link-text">
-            <h4>Settings</h4>
-            <p>Configure your app</p>
-          </div>
-        </a>
-        <a class="quick-link" onclick="navigateTo('/polaris'); return false;" href="/polaris">
-          <div class="quick-link-icon">&#127912;</div>
-          <div class="quick-link-text">
-            <h4>Components</h4>
-            <p>UI component reference</p>
-          </div>
-        </a>
-      </div>
-    </div>
+    <s-section heading="Quick Links">
+      <s-grid gridTemplateColumns="@container (inline-size <= 480px) 1fr, 1fr 1fr 1fr" gap="base">
+        <s-box border="base" borderRadius="base" padding="base">
+          <s-clickable href="/products">
+            <s-stack gap="small-200">
+              <s-text variant="headingSm">Products</s-text>
+              <s-text color="subdued">Search and browse products</s-text>
+            </s-stack>
+          </s-clickable>
+        </s-box>
+        <s-box border="base" borderRadius="base" padding="base">
+          <s-clickable href="/settings">
+            <s-stack gap="small-200">
+              <s-text variant="headingSm">Settings</s-text>
+              <s-text color="subdued">Configure your app</s-text>
+            </s-stack>
+          </s-clickable>
+        </s-box>
+        <s-box border="base" borderRadius="base" padding="base">
+          <s-clickable href="/polaris">
+            <s-stack gap="small-200">
+              <s-text variant="headingSm">Components</s-text>
+              <s-text color="subdued">Polaris UI reference</s-text>
+            </s-stack>
+          </s-clickable>
+        </s-box>
+      </s-grid>
+    </s-section>
 
     <!-- Quick actions -->
-    <div class="card">
-      <h2>Quick Actions</h2>
-      <p>Test your API connection and App Bridge features.</p>
-      <div class="btn-group mt-4">
-        <button class="btn btn-primary" onclick="testApiConnection()">Test API Connection</button>
-        <button class="btn" onclick="showToast('Everything is working!')">Test Toast</button>
-      </div>
-    </div>
-  </div>
+    <s-section heading="Quick Actions">
+      <s-text color="subdued">Test your API connection and App Bridge features.</s-text>
+      <s-stack direction="inline" gap="base" style="margin-top: 12px;">
+        <s-button variant="primary" onclick="testApiConnection()">Test API Connection</s-button>
+        <s-button onclick="showToast('Everything is working!')">Test Toast</s-button>
+      </s-stack>
+    </s-section>
+
+    <!-- Footer -->
+    <s-section>
+      <s-stack alignItems="center">
+        <s-text color="subdued">Built with Shopify App Bridge + Firebase Hosting. Edit <code>web/</code> to customize.</s-text>
+      </s-stack>
+    </s-section>
+  </s-page>
 
   <script src="/js/app.js"></script>
   <script src="/js/pages/home.js"></script>

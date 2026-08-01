@@ -6,6 +6,7 @@
   <title>Products - {{APP_NAME}}</title>
   <link rel="stylesheet" href="/css/app.css">
   <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
+  <script src="https://cdn.shopify.com/shopifycloud/polaris.js"></script>
 </head>
 <body>
   <ui-nav-menu>
@@ -15,55 +16,47 @@
     <a href="/polaris">Components</a>
   </ui-nav-menu>
 
-  <ui-title-bar title="Products">
-    <button variant="primary" onclick="openResourcePicker()">Resource Picker</button>
-  </ui-title-bar>
+  <s-page heading="Products">
+    <s-link slot="breadcrumb-actions" href="/">Dashboard</s-link>
+    <s-button slot="primary-action" onclick="openResourcePicker()">Resource Picker</s-button>
 
-  <div class="page">
     <!-- Search bar -->
-    <div class="card">
-      <div class="search-wrapper" style="margin-bottom: 0;">
-        <span class="search-icon">&#128269;</span>
-        <input
-          type="text"
-          class="search-input"
-          id="search-input"
-          placeholder="Search products by title..."
-          autocomplete="off"
-        >
-      </div>
-    </div>
+    <s-section>
+      <s-text-field
+        id="search-input"
+        label="Search products"
+        placeholder="Search products by title..."
+        labelHidden
+        clearButton
+      ></s-text-field>
+    </s-section>
 
-    <!-- Action bar -->
-    <div class="flex items-center justify-between mb-4">
-      <p class="text-secondary text-sm" id="results-count"></p>
-      <button class="btn btn-sm" onclick="openResourcePicker()">
-        &#128270; Use Resource Picker
-      </button>
-    </div>
+    <!-- Results count -->
+    <s-section>
+      <s-text id="results-count" color="subdued"></s-text>
+    </s-section>
 
     <!-- Results container -->
-    <div id="products-container">
-      <div class="card">
-        <div class="empty-state">
-          <div class="empty-state-icon">&#128722;</div>
-          <h3>Search for products</h3>
-          <p>Enter a search term above to find products in your store, or use the Resource Picker to browse.</p>
-          <button class="btn btn-primary" onclick="document.getElementById('search-input').focus()">
-            Start searching
-          </button>
-        </div>
+    <s-section>
+      <div id="products-container">
+        <s-box padding="large-1200" border="base" borderRadius="base">
+          <s-stack alignItems="center" gap="base">
+            <s-text variant="headingMd">Search for products</s-text>
+            <s-text color="subdued">Enter a search term above to find products in your store, or use the Resource Picker to browse.</s-text>
+            <s-button variant="primary" onclick="document.getElementById('search-input').focus()">Start searching</s-button>
+          </s-stack>
+        </s-box>
       </div>
-    </div>
-  </div>
+    </s-section>
+  </s-page>
 
   <!-- Product detail modal -->
   <ui-modal id="product-detail-modal" variant="large">
     <div id="product-detail-content" style="padding: 16px;">
-      <div class="loading-state">
-        <div class="spinner"></div>
-        <p>Loading product details...</p>
-      </div>
+      <s-stack alignItems="center" gap="base">
+        <s-spinner></s-spinner>
+        <s-text color="subdued">Loading product details...</s-text>
+      </s-stack>
     </div>
     <ui-title-bar title="Product Details">
       <button variant="primary" onclick="document.getElementById('product-detail-modal').hide()">Done</button>
@@ -73,7 +66,7 @@
   <!-- Resource picker result modal -->
   <ui-modal id="picker-result-modal">
     <div id="picker-result-content" style="padding: 16px;">
-      <p class="text-secondary">No products selected.</p>
+      <s-text color="subdued">No products selected.</s-text>
     </div>
     <ui-title-bar title="Selected Products">
       <button variant="primary" onclick="document.getElementById('picker-result-modal').hide()">Close</button>

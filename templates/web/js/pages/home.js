@@ -1,43 +1,54 @@
 /**
  * Dashboard (home) page logic
- * Fetches shop info and renders store details + stats.
+ * Fetches shop info and renders store details + stats using Polaris Web Components.
  */
 
 (function () {
   "use strict";
 
   // ── Load shop data on page ready ────────────────────────────────
-  document.addEventListener("DOMContentLoaded", loadDashboard);
+  document.addEventListener("DOMContentLoaded", function () {
+    if (typeof apiFetch !== "function") {
+      var loading = document.getElementById("shop-loading");
+      if (loading) {
+        loading.innerHTML =
+          '<s-banner tone="critical"><s-text><s-text fontWeight="semibold">App failed to initialize</s-text> Core scripts did not load. Please refresh the page.</s-text></s-banner>';
+      }
+      return;
+    }
+    loadDashboard();
+  });
 
   async function loadDashboard() {
-    var container = document.getElementById("shop-info-content");
-    var statusBadge = document.getElementById("shop-status");
+    var loading = document.getElementById("shop-loading");
+    var content = document.getElementById("shop-info-content");
 
     try {
       var data = await apiFetch("/api/shop");
       var shop = data.shop || data;
 
       // Render store info
-      renderShopInfo(container, shop);
+      renderShopInfo(content, shop);
 
-      // Show connected badge
-      if (statusBadge) statusBadge.style.display = "";
+      // Hide loading, show content
+      if (loading) loading.style.display = "none";
+      content.style.display = "";
 
       // Update stats
       updateStats(shop);
     } catch (err) {
-      container.innerHTML =
-        '<div class="banner banner-critical">' +
-        '<div class="banner-icon">&#9888;</div>' +
-        '<div class="banner-content">' +
-        "<p><strong>Could not load store information</strong></p>" +
-        "<p>" + escapeHtml(err.message) + "</p>" +
-        "</div></div>";
+      if (loading) {
+        loading.innerHTML =
+          '<s-banner tone="critical">' +
+          "<s-text>" +
+          "<s-text fontWeight=\"semibold\">Could not load store information</s-text> " +
+          escapeHtml(err.message) +
+          "</s-text></s-banner>";
+      }
     }
   }
 
   // ── Render shop info list ───────────────────────────────────────
-  // The /api/shop endpoint returns GraphQL field names (camelCase).
   function renderShopInfo(container, shop) {
     var fields = [
       { label: "Store name", value: shop.name || "--" },
@@ -49,15 +60,16 @@
       { label: "Shopify domain", value: shop.myshopifyDomain || "--" },
     ];
 
-    var html = '<ul class="info-list">';
+    var html = '<s-box border="base" borderRadius="base" padding="base">';
+    html += '<s-stack gap="small-200">';
     for (var i = 0; i < fields.length; i++) {
       html +=
-        "<li>" +
-        '<span class="info-list-label">' + escapeHtml(fields[i].label) + "</span>" +
-        '<span class="info-list-value">' + escapeHtml(String(fields[i].value)) + "</span>" +
-        "</li>";
+        '<s-grid gridTemplateColumns="1fr 1fr" gap="small-200">' +
+        '<s-text color="subdued">' + escapeHtml(fields[i].label) + "</s-text>" +
+        "<s-text>" + escapeHtml(String(fields[i].value)) + "</s-text>" +
+        "</s-grid>";
     }
-    html += "</ul>";
+    html += "</s-stack></s-box>";
 
     container.innerHTML = html;
   }
@@ -68,7 +80,6 @@
     var planEl = document.getElementById("stat-plan");
 
     if (productsEl) {
-      // GraphQL returns productCount: { count } via alias
       var count = shop.productCount && shop.productCount.count;
       productsEl.textContent = count !== undefined && count !== null ? String(count) : "--";
     }

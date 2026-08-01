@@ -27,7 +27,7 @@
   {% endif %}
 </div>
 
-{{ 'app-block.js' | asset_url | script_tag }}
+<script src="{{ 'app-block.js' | asset_url }}" defer></script>
 
 {% schema %}
 {

@@ -1,6 +1,6 @@
 /**
  * App Bridge initialization and shared utilities
- * Loaded on every page -- provides apiFetch, showToast, navigateTo, and helpers.
+ * Loaded on every page -- provides apiFetch, showToast, and helpers.
  *
  * In embedded admin, window.shopify is injected by the App Bridge CDN script.
  * Outside embedded admin (direct URL visit), graceful fallbacks are used.
@@ -9,15 +9,37 @@
 (function () {
   "use strict";
 
-  // ── Query params provided by Shopify when loading the app ───────
+  // ── Shop context ────────────────────────────────────────────────
+  // App Bridge is the source of truth: in the embedded admin the CDN
+  // script injects window.shopify, and window.shopify.config carries
+  // { apiKey, shop, host, locale } on EVERY page load.
+  //
+  // The ?shop=/?host= query params are only present on the first load --
+  // the <ui-nav-menu> links are plain hrefs with no query string -- so
+  // they are used purely as a fallback for viewing a page outside the
+  // embedded admin (e.g. hitting the Hosting URL directly).
   var params = new URLSearchParams(window.location.search);
-  var shop = params.get("shop") || "";
-  var host = params.get("host") || "";
 
-  // Shared state accessible across pages
+  function appBridgeConfig() {
+    return (window.shopify && window.shopify.config) || null;
+  }
+
+  // Shared state accessible across pages.
+  // shop/host are getters, not fixed values, so they resolve at read time
+  // -- correct on every page and independent of script load order.
   window.__app = {
-    shop: shop,
-    host: host,
+    get shop() {
+      var cfg = appBridgeConfig();
+      if (cfg && cfg.shop) return cfg.shop;
+      // Query params are user-controlled -- validate before trusting.
+      var rawShop = params.get("shop") || "";
+      return /^[a-zA-Z0-9][a-zA-Z0-9\-]*\.myshopify\.com$/.test(rawShop) ? rawShop : "";
+    },
+    get host() {
+      var cfg = appBridgeConfig();
+      if (cfg && cfg.host) return cfg.host;
+      return params.get("host") || "";
+    },
     ready: false,
   };
 
@@ -92,50 +114,46 @@
     }, 4000);
   };
 
-  // ── Navigation helper ───────────────────────────────────────────
-  // Preserves shop/host query params when navigating between pages.
-  window.navigateTo = function navigateTo(path) {
-    var qs = new URLSearchParams();
-    if (window.__app.shop) qs.set("shop", window.__app.shop);
-    if (window.__app.host) qs.set("host", window.__app.host);
-    var search = qs.toString();
-    window.location.href = path + (search ? "?" + search : "");
-  };
+  // ── Navigation ──────────────────────────────────────────────────
+  // No helper needed: App Bridge intercepts in-app navigation, so plain
+  // <a href="/products"> links (see <ui-nav-menu>) and <s-clickable href>
+  // are the supported way to move between pages. Do NOT hand-append
+  // shop/host to URLs -- that is the legacy pattern, and window.shopify
+  // provides the shop context on every page (see window.__app above).
 
-  // ── Loading state helpers ───────────────────────────────────────
+  // ── Loading state helpers (Polaris Web Components) ──────────────
   window.showLoading = function showLoading(containerId) {
     var el = document.getElementById(containerId);
     if (!el) return;
     el.innerHTML =
-      '<div class="loading-state">' +
-      '<div class="spinner"></div>' +
-      "<p>Loading\u2026</p>" +
-      "</div>";
+      '<s-box padding="large-400">' +
+      '<s-stack alignItems="center" gap="base">' +
+      "<s-spinner></s-spinner>" +
+      '<s-text color="subdued">Loading\u2026</s-text>' +
+      "</s-stack></s-box>";
   };
 
   window.hideLoading = function hideLoading(containerId) {
     var el = document.getElementById(containerId);
     if (!el) return;
-    var spinner = el.querySelector(".loading-state");
-    if (spinner) spinner.remove();
+    el.innerHTML = "";
   };
 
-  // ── Error rendering helper ──────────────────────────────────────
+  // ── Error rendering helper (Polaris Web Components) ─────────────
   window.showError = function showError(containerId, message) {
     var el = document.getElementById(containerId);
     if (!el) return;
     el.innerHTML =
-      '<div class="banner banner-critical">' +
-      '<div class="banner-icon">&#9888;</div>' +
-      '<div class="banner-content">' +
-      "<p><strong>Something went wrong</strong></p>" +
-      "<p>" + escapeHtml(message) + "</p>" +
-      "</div></div>";
+      '<s-banner tone="critical">' +
+      "<s-text>" +
+      "<s-text fontWeight=\"semibold\">Something went wrong</s-text> " +
+      escapeHtml(message) +
+      "</s-text></s-banner>";
   };
 
   // ── Format helpers ──────────────────────────────────────────────
   window.formatCurrency = function formatCurrency(amount, currency) {
-    return new Intl.NumberFormat("en-US", {
+    return new Intl.NumberFormat(undefined, {
       style: "currency",
       currency: currency || "USD",
     }).format(amount);
@@ -143,7 +161,7 @@
 
   window.formatDate = function formatDate(dateStr) {
     if (!dateStr) return "--";
-    return new Date(dateStr).toLocaleDateString("en-US", {
+    return new Date(dateStr).toLocaleDateString(undefined, {
       year: "numeric",
       month: "short",
       day: "numeric",
@@ -171,7 +189,16 @@
   }
   window.escapeHtml = escapeHtml;
 
+  function escapeAttr(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+  window.escapeAttr = escapeAttr;
+
   // ── Mark ready ──────────────────────────────────────────────────
   window.__app.ready = true;
-  console.log("[app.js] Initialized", { shop: shop, host: host });
 })();

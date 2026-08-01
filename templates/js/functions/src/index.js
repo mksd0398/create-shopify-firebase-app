@@ -47,6 +47,14 @@ apiApp.use(cors({ origin: true }));
 apiApp.use(express.json());
 apiApp.use("/api", adminApiRouter);
 
+// Express 5 forwards rejected promises from async handlers here, so one
+// error middleware covers every route. Must keep all four arguments.
+// eslint-disable-next-line no-unused-vars
+apiApp.use((err, req, res, next) => {
+  console.error("Unhandled API error:", err);
+  res.status(500).json({ error: "Internal server error" });
+});
+
 exports.api = onRequest(
   { memory: "256MiB", timeoutSeconds: 60, invoker: "public" },
   apiApp,
@@ -67,6 +75,12 @@ const proxyApp = express();
 proxyApp.use(cors({ origin: true }));
 proxyApp.use(express.json());
 proxyApp.use("/proxy", proxyRouter);
+
+// eslint-disable-next-line no-unused-vars
+proxyApp.use((err, req, res, next) => {
+  console.error("Unhandled proxy error:", err);
+  res.status(500).json({ error: "Internal server error" });
+});
 
 exports.proxy = onRequest(
   { memory: "256MiB", timeoutSeconds: 30, invoker: "public" },

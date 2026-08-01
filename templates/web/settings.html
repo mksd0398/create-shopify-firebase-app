@@ -6,6 +6,7 @@
   <title>Settings - {{APP_NAME}}</title>
   <link rel="stylesheet" href="/css/app.css">
   <script src="https://cdn.shopify.com/shopifycloud/app-bridge.js"></script>
+  <script src="https://cdn.shopify.com/shopifycloud/polaris.js"></script>
 </head>
 <body>
   <ui-nav-menu>
@@ -15,24 +16,74 @@
     <a href="/polaris">Components</a>
   </ui-nav-menu>
 
-  <ui-title-bar title="Settings">
-    <button variant="primary" onclick="saveSettings()">Save</button>
-  </ui-title-bar>
+  <form data-save-bar id="settings-form">
+    <s-page heading="Settings" inlineSize="small">
+      <s-link slot="breadcrumb-actions" href="/">Dashboard</s-link>
 
-  <ui-save-bar id="save-bar">
-    <button id="save-btn" variant="primary"></button>
-    <button id="discard-btn"></button>
-  </ui-save-bar>
+      <!-- Loading state -->
+      <s-box id="settings-loading" padding="large-400">
+        <s-stack alignItems="center"><s-spinner></s-spinner></s-stack>
+      </s-box>
 
-  <div class="page page-narrow">
-    <!-- Settings form -->
-    <div id="settings-container">
-      <div class="loading-state">
-        <div class="spinner"></div>
-        <p>Loading settings...</p>
+      <!-- Settings content (hidden until loaded) -->
+      <div id="settings-content" style="display:none;">
+
+        <!-- General settings -->
+        <s-section heading="General">
+          <s-text color="subdued">Configure basic app settings.</s-text>
+          <s-box paddingBlockStart="base">
+            <s-stack gap="base">
+              <s-text-field
+                id="setting-greeting"
+                label="Store greeting message"
+                placeholder="Welcome to our store!"
+                helpText="Displayed to customers when they visit your app."
+              ></s-text-field>
+
+              <s-select id="setting-theme" label="Theme" helpText="Choose the visual theme for your app interface.">
+                <s-option value="auto">Auto (System)</s-option>
+                <s-option value="light">Light</s-option>
+                <s-option value="dark">Dark</s-option>
+              </s-select>
+            </s-stack>
+          </s-box>
+        </s-section>
+
+        <!-- Notifications -->
+        <s-section heading="Notifications">
+          <s-text color="subdued">Manage email and push notification preferences.</s-text>
+          <s-box paddingBlockStart="base">
+            <s-stack gap="base">
+              <s-switch id="setting-notifications" label="Enable email notifications" helpText="Receive email alerts for new orders and important events."></s-switch>
+              <s-switch id="setting-order-alerts" label="Order alert notifications" helpText="Get notified when a new order is placed."></s-switch>
+            </s-stack>
+          </s-box>
+        </s-section>
+
+        <!-- Advanced -->
+        <s-section heading="Advanced">
+          <s-text color="subdued">Advanced customization options.</s-text>
+          <s-box paddingBlockStart="base">
+            <s-text-field
+              id="setting-css"
+              label="Custom CSS"
+              placeholder="/* Add custom styles here */"
+              multiline="6"
+              helpText="Add custom CSS to override default styles. Must be sanitized server-side before rendering — never inject raw user CSS into pages."
+            ></s-text-field>
+          </s-box>
+        </s-section>
+
+        <!-- Fallback save button (visible outside embedded admin where data-save-bar is unavailable) -->
+        <s-section>
+          <s-stack direction="inline" gap="base">
+            <s-button variant="primary" onclick="saveSettings()">Save settings</s-button>
+          </s-stack>
+        </s-section>
+
       </div>
-    </div>
-  </div>
+    </s-page>
+  </form>
 
   <script src="/js/app.js"></script>
   <script src="/js/pages/settings.js"></script>

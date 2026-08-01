@@ -9,8 +9,9 @@ export const adminApiRouter = Router();
 adminApiRouter.use(verifySessionToken);
 
 // Shopify API version — update when Shopify releases new versions
+// (quarterly: January, April, July, October)
 // Docs: https://shopify.dev/docs/api/usage/versioning
-const API_VERSION = "2026-01";
+const API_VERSION = "2026-07";
 
 // Default app settings — returned when no settings are saved yet
 const DEFAULT_SETTINGS = {
@@ -145,7 +146,9 @@ adminApiRouter.get("/products/:id", async (req: Request, res: Response) => {
     return;
   }
 
-  const productId = req.params.id;
+  // Express 5 types params as string | string[] (repeatable params);
+  // a single ":id" segment is always a string.
+  const productId = req.params.id as string;
   // Support both raw numeric IDs and full GID format
   const gid = productId.startsWith("gid://")
     ? productId

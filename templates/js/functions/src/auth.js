@@ -2,6 +2,18 @@ const crypto = require("crypto");
 const { getConfig } = require("./config");
 const { db } = require("./firebase");
 
+// Shop domains are always <handle>.myshopify.com. Anything else is rejected —
+// the value ends up in a redirect Location header and in Firestore doc IDs,
+// so an unvalidated `shop` is an open redirect.
+const SHOP_DOMAIN_PATTERN = /^[a-zA-Z0-9][a-zA-Z0-9-]*\.myshopify\.com$/;
+
+// The state nonce is 16 random bytes hex-encoded (see handleStart).
+const NONCE_PATTERN = /^[a-f0-9]{32}$/;
+
+function isValidShopDomain(shop) {
+  return typeof shop === "string" && SHOP_DOMAIN_PATTERN.test(shop);
+}
+
 /**
  * Standalone OAuth handler — no Express, no middleware overhead.
  *
@@ -20,16 +32,16 @@ async function authHandler(req, res) {
   if (urlPath === "/auth/callback") {
     await handleCallback(req, res);
   } else {
-    handleStart(req, res);
+    await handleStart(req, res);
   }
 }
 
 // ─── Step 1: Start OAuth ─────────────────────────────────────────────────
 // Merchant clicks "Install" -> redirect to Shopify consent screen.
-function handleStart(req, res) {
+async function handleStart(req, res) {
   const { shop } = req.query;
-  if (!shop || typeof shop !== "string") {
-    res.status(400).send("Missing shop parameter");
+  if (!isValidShopDomain(shop)) {
+    res.status(400).send("Invalid shop parameter");
     return;
   }
 
@@ -37,11 +49,18 @@ function handleStart(req, res) {
   const nonce = crypto.randomBytes(16).toString("hex");
   const redirectUri = `${config.appUrl}/auth/callback`;
 
-  // Store nonce for CSRF protection
-  db.collection("authNonces").doc(nonce).set({
-    shop,
-    createdAt: new Date().toISOString(),
-  });
+  // Store nonce for CSRF protection. Must be awaited — Cloud Functions may
+  // freeze the instance once the response is sent, dropping in-flight writes.
+  try {
+    await db.collection("authNonces").doc(nonce).set({
+      shop,
+      createdAt: new Date().toISOString(),
+    });
+  } catch (err) {
+    console.error("Failed to store auth nonce:", err);
+    res.status(500).send("Failed to start OAuth");
+    return;
+  }
 
   const authUrl =
     `https://${shop}/admin/oauth/authorize` +
@@ -60,6 +79,11 @@ async function handleCallback(req, res) {
 
   if (!shop || !code || !hmac) {
     res.status(400).send("Missing required parameters");
+    return;
+  }
+
+  if (!isValidShopDomain(shop)) {
+    res.status(400).send("Invalid shop parameter");
     return;
   }
 
@@ -88,11 +112,19 @@ async function handleCallback(req, res) {
     return;
   }
 
-  // Clean up nonce
-  if (state) {
-    const nonceDoc = await db.collection("authNonces").doc(state).get();
-    if (nonceDoc.exists) await nonceDoc.ref.delete();
+  // Verify and consume the CSRF nonce. A missing or unknown state means this
+  // callback did not come from a flow we started, so it must be rejected.
+  if (typeof state !== "string" || !NONCE_PATTERN.test(state)) {
+    res.status(403).send("Missing or malformed state parameter");
+    return;
   }
+
+  const nonceDoc = await db.collection("authNonces").doc(state).get();
+  if (!nonceDoc.exists || nonceDoc.data()?.shop !== shop) {
+    res.status(403).send("Invalid state parameter");
+    return;
+  }
+  await nonceDoc.ref.delete();
 
   // Exchange code for access token
   try {

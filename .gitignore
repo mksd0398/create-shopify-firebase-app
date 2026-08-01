@@ -1,6 +1,15 @@
 # Dependencies
 node_modules/
 
+# Template build artifacts — these must never be scaffolded into user projects
+templates/**/functions/lib/
+templates/**/functions/package-lock.json
+
+# AI tooling / local agent state
+.claude/
+.claude.json
+.codemap/
+
 # IDE / editor
 .vscode/
 .idea/

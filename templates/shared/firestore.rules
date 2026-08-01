@@ -1,8 +1,16 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // All access goes through Cloud Functions (admin SDK).
-    // No direct client-side access — the backend is the single trusted entry point.
+    // Deny-all by default. Every read/write goes through Cloud Functions using
+    // the firebase-admin SDK, which bypasses these rules entirely — so denying
+    // all client access costs the app nothing and is the safest posture.
+    //
+    // This matters: `shopSessions` holds Shopify offline access tokens and
+    // `authNonces` holds OAuth state nonces. Either one leaking to a browser
+    // client would let an attacker impersonate the app against a merchant's
+    // shop or forge an OAuth callback. Do not add per-collection `allow` rules
+    // here — if the frontend needs data, expose it through an authenticated
+    // Cloud Functions endpoint instead.
     match /{document=**} {
       allow read, write: if false;
     }

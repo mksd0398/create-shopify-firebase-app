@@ -1,6 +1,6 @@
 /**
- * Polaris component demo page logic
- * Copy-to-clipboard, live demos, collapsible sections, and interactive examples.
+ * Polaris Web Components reference page logic
+ * Copy-to-clipboard, resource picker demo, and interactive examples.
  */
 
 (function () {
@@ -8,7 +8,6 @@
 
   // ── Copy to clipboard ──────────────────────────────────────────
   window.copyCode = function (button) {
-    // Find the <pre><code> sibling
     var container = button.closest(".demo-code") || button.closest(".code-block");
     if (!container) return;
 
@@ -17,7 +16,6 @@
 
     var text = codeEl.textContent;
 
-    // Use clipboard API when available
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text).then(function () {
         showCopiedFeedback(button);
@@ -55,64 +53,6 @@
     }, 2000);
   }
 
-  // ── Banner reset ───────────────────────────────────────────────
-  window.resetBanners = function () {
-    var preview = document.getElementById("banners-preview");
-    if (!preview) return;
-
-    // Remove existing banners
-    var existing = preview.querySelectorAll(".banner");
-    for (var i = 0; i < existing.length; i++) {
-      existing[i].remove();
-    }
-
-    // Re-insert banners before the reset button
-    var resetBtn = preview.querySelector("button");
-
-    var banners = [
-      {
-        cls: "banner-info",
-        icon: "&#8505;",
-        title: "Information",
-        text: "This is an informational banner. Use it for tips or neutral messages.",
-      },
-      {
-        cls: "banner-success",
-        icon: "&#10003;",
-        title: "Success",
-        text: "The operation completed successfully. Your changes have been saved.",
-      },
-      {
-        cls: "banner-warning",
-        icon: "&#9888;",
-        title: "Warning",
-        text: "This action may have unintended consequences. Please review before proceeding.",
-      },
-      {
-        cls: "banner-critical",
-        icon: "&#10006;",
-        title: "Error",
-        text: "Something went wrong. Please try again or contact support.",
-      },
-    ];
-
-    for (var j = 0; j < banners.length; j++) {
-      var b = banners[j];
-      var div = document.createElement("div");
-      div.className = "banner " + b.cls;
-      div.innerHTML =
-        '<div class="banner-icon">' + b.icon + "</div>" +
-        '<div class="banner-content">' +
-        "<p><strong>" + b.title + "</strong></p>" +
-        "<p>" + b.text + "</p>" +
-        "</div>" +
-        '<button class="banner-dismiss" onclick="this.closest(\'.banner\').remove()">&times;</button>';
-      preview.insertBefore(div, resetBtn);
-    }
-
-    showToast("Banners restored");
-  };
-
   // ── Confirmation delete demo ───────────────────────────────────
   window.demoConfirmDelete = function () {
     var modal = document.getElementById("demo-modal-confirm");
@@ -127,13 +67,12 @@
       var resultDiv = document.getElementById("picker-demo-result");
       if (resultDiv) {
         resultDiv.innerHTML =
-          '<div class="banner banner-warning" style="margin-bottom:0;">' +
-          '<div class="banner-icon">&#9888;</div>' +
-          '<div class="banner-content">' +
-          "<p><strong>Not available</strong></p>" +
-          "<p>The Resource Picker requires the app to be loaded inside the Shopify admin iframe. " +
-          "Install the app on a Shopify store to test this feature.</p>" +
-          "</div></div>";
+          '<s-banner tone="warning">' +
+          "<s-text>" +
+          "<s-text fontWeight=\"semibold\">Not available</s-text> " +
+          "The Resource Picker requires the app to be loaded inside the Shopify admin iframe. " +
+          "Install the app on a Shopify store to test this feature." +
+          "</s-text></s-banner>";
       }
       return;
     }
@@ -143,20 +82,20 @@
       var resultDiv = document.getElementById("picker-demo-result");
 
       if (!selected || selected.length === 0) {
-        if (resultDiv) resultDiv.innerHTML = '<p class="text-secondary">Selection cancelled.</p>';
+        if (resultDiv) resultDiv.innerHTML = '<s-text color="subdued">Selection cancelled.</s-text>';
         return;
       }
 
-      var html = '<div class="card" style="margin-bottom:0;">';
-      html += '<h3 class="mb-3">Selected ' + selected.length + " product(s)</h3>";
-      html += '<ul class="info-list">';
+      var html = '<s-box border="base" borderRadius="base" padding="base">';
+      html += '<s-stack gap="base">';
+      html += '<s-text variant="headingSm">Selected ' + selected.length + " product(s)</s-text>";
       for (var i = 0; i < selected.length; i++) {
-        html += "<li>" +
-          '<span class="font-semibold">' + escapeHtml(selected[i].title || "Untitled") + "</span>" +
-          '<span class="badge badge-success">Selected</span>' +
-          "</li>";
+        html += '<s-stack direction="inline" gap="base" alignItems="center">';
+        html += '<s-text fontWeight="semibold">' + escapeHtml(selected[i].title || "Untitled") + "</s-text>";
+        html += '<s-badge tone="success">Selected</s-badge>';
+        html += "</s-stack>";
       }
-      html += "</ul></div>";
+      html += "</s-stack></s-box>";
       if (resultDiv) resultDiv.innerHTML = html;
     } catch (err) {
       showToast("Resource picker error: " + err.message, true);
@@ -176,13 +115,16 @@
 
   // ── Smooth scroll for anchor links ─────────────────────────────
   document.addEventListener("DOMContentLoaded", function () {
-    var anchors = document.querySelectorAll('a[href^="#section-"]');
+    var anchors = document.querySelectorAll('a[href^="#section-"], s-button[href^="#section-"]');
     for (var i = 0; i < anchors.length; i++) {
       anchors[i].addEventListener("click", function (e) {
-        e.preventDefault();
-        var target = document.querySelector(this.getAttribute("href"));
-        if (target) {
-          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        var href = this.getAttribute("href");
+        if (href && href.charAt(0) === "#") {
+          e.preventDefault();
+          var target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
         }
       });
     }

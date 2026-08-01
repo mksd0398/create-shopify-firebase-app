@@ -1,8 +1,14 @@
 name: Publish to npm
 
+# Releases are explicit. Pushing to master no longer publishes — tag it, or run
+# this workflow by hand from the Actions tab.
+#
+#   git tag v2.1.0 && git push origin v2.1.0
+#
 on:
   push:
-    branches: [master]
+    tags: ["v*"]
+  workflow_dispatch:
 
 jobs:
   publish:
@@ -20,7 +26,28 @@ jobs:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
 
-      - name: Check if version needs publishing
+      - name: Sanity check the CLI before publishing
+        run: |
+          node --check bin/create.js
+          node --check lib/index.js
+          node --check lib/provision.js
+          node --check lib/preflight.js
+          node -e "JSON.parse(require('fs').readFileSync('templates/shared/firebase.json','utf8'))"
+          node bin/create.js --version
+          node bin/create.js --help > /dev/null
+
+      - name: Refuse to ship template build artifacts
+        # copyDirSync copies templates verbatim, so a stray node_modules/ or
+        # lib/ here would be shipped into every scaffolded project
+        run: |
+          if find templates -type d \( -name node_modules -o -name lib \) | grep -q .; then
+            echo "::error::build artifacts present under templates/ — clean them before publishing"
+            find templates -type d \( -name node_modules -o -name lib \)
+            exit 1
+          fi
+          echo "templates are clean"
+
+      - name: Check if this version needs publishing
         id: check
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
@@ -33,6 +60,11 @@ jobs:
             echo "Will publish version $PACKAGE_VERSION"
           fi
 
+      # NPM_TOKEN is long-lived and WILL expire — npm granular tokens cap at 90
+      # days. A 404 on PUT during publish means the token lapsed, not that the
+      # package is missing; npm returns 404 instead of 401 by design.
+      # Upgrade path: enable Trusted Publishing for this package on npmjs.com
+      # and the token can be dropped entirely (id-token: write is already set).
       - name: Publish to npm
         if: steps.check.outputs.skip != 'true'
         run: npm publish --provenance --access public

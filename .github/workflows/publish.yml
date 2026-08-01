@@ -51,6 +51,10 @@ jobs:
             if (!ok) { console.error('npm >= 11.5.1 required for trusted publishing'); process.exit(1); }
           " "$NPM_VERSION"
 
+      # The smoke check below actually runs the CLI, which imports `prompts`
+      - name: Install dependencies
+        run: npm ci
+
       - name: Sanity check the CLI before publishing
         run: |
           node --check bin/create.js

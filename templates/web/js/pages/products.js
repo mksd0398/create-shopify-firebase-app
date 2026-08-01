@@ -10,12 +10,21 @@
   var searchInput = null;
   var container = null;
   var resultsCount = null;
+  var resultsSection = null;
 
   // ── Init ────────────────────────────────────────────────────────
+  // Show the count card only when there is a count. An empty <s-section>
+  // still renders as a padded card, which reads as a stray blank box.
+  function setResultsCount(text) {
+    if (resultsCount) resultsCount.textContent = text || "";
+    if (resultsSection) resultsSection.style.display = text ? "" : "none";
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     searchInput = document.getElementById("search-input");
     container = document.getElementById("products-container");
     resultsCount = document.getElementById("results-count");
+    resultsSection = document.getElementById("results-section");
 
     if (searchInput) {
       var debouncedSearch = debounce(handleSearch, 400);
@@ -43,7 +52,7 @@
         '<s-text color="subdued">Enter a search term above to find products in your store, or use the Resource Picker to browse.</s-text>' +
         '<s-button variant="primary" onclick="document.getElementById(\'search-input\').focus()">Start searching</s-button>' +
         "</s-stack></s-box>";
-      if (resultsCount) resultsCount.textContent = "";
+      setResultsCount("");
       return;
     }
 
@@ -59,8 +68,8 @@
       var data = await apiFetch("/api/products/search?q=" + encodeURIComponent(query));
       var products = data.products || [];
 
-      if (resultsCount) {
-        resultsCount.textContent = products.length + " product" + (products.length !== 1 ? "s" : "") + " found";
+      {
+        setResultsCount(products.length + " product" + (products.length !== 1 ? "s" : "") + " found");
       }
 
       if (products.length === 0) {
@@ -81,7 +90,7 @@
         "<s-text fontWeight=\"semibold\">Search failed</s-text> " +
         escapeHtml(err.message) +
         "</s-text></s-banner>";
-      if (resultsCount) resultsCount.textContent = "";
+      setResultsCount("");
     }
   }
 

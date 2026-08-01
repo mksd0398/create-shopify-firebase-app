@@ -32,8 +32,9 @@
       ></s-text-field>
     </s-section>
 
-    <!-- Results count -->
-    <s-section>
+    <!-- Results count — hidden until there is a count, so the card does not
+         render as an empty box on load -->
+    <s-section id="results-section" style="display:none;">
       <s-text id="results-count" color="subdued"></s-text>
     </s-section>
 

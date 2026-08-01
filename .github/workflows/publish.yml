@@ -1,9 +1,21 @@
 name: Publish to npm
 
-# Releases are explicit. Pushing to master no longer publishes — tag it, or run
+# Releases are explicit. Pushing to master does not publish — tag it, or run
 # this workflow by hand from the Actions tab.
 #
 #   git tag v2.1.0 && git push origin v2.1.0
+#
+# Authentication uses npm Trusted Publishing (OIDC). There is no NPM_TOKEN:
+# GitHub mints a short-lived identity token per run and npm verifies it came
+# from this repo and this workflow file. Nothing long-lived can leak or expire.
+#
+# This requires a one-time setup on npmjs.com, under the package's
+# Settings -> Trusted Publisher:
+#   Organization or user : mksd0398
+#   Repository           : create-shopify-firebase-app
+#   Workflow filename    : publish.yml     <- must match THIS file's name
+#   Environment          : (leave blank)
+#   Allowed actions      : npm publish
 #
 on:
   push:
@@ -17,14 +29,27 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write
+      id-token: write # required: lets GitHub mint the OIDC token npm verifies
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      # Node 24, not 22: trusted publishing needs npm >= 11.5.1, and Node 22
+      # still ships npm 10.x. Node 24 ships 11.16.0.
+      - uses: actions/setup-node@v6
         with:
-          node-version: "22"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
+          package-manager-cache: false
+
+      - name: Assert npm is new enough for trusted publishing
+        run: |
+          NPM_VERSION=$(npm --version)
+          echo "npm $NPM_VERSION"
+          node -e "
+            const [a,b,c] = process.argv[1].split('.').map(Number);
+            const ok = a > 11 || (a === 11 && (b > 5 || (b === 5 && c >= 1)));
+            if (!ok) { console.error('npm >= 11.5.1 required for trusted publishing'); process.exit(1); }
+          " "$NPM_VERSION"
 
       - name: Sanity check the CLI before publishing
         run: |
@@ -33,6 +58,7 @@ jobs:
           node --check lib/provision.js
           node --check lib/preflight.js
           node -e "JSON.parse(require('fs').readFileSync('templates/shared/firebase.json','utf8'))"
+          node -e "JSON.parse(require('fs').readFileSync('.opensource/project.json','utf8'))"
           node bin/create.js --version
           node bin/create.js --help > /dev/null
 
@@ -60,13 +86,8 @@ jobs:
             echo "Will publish version $PACKAGE_VERSION"
           fi
 
-      # NPM_TOKEN is long-lived and WILL expire — npm granular tokens cap at 90
-      # days. A 404 on PUT during publish means the token lapsed, not that the
-      # package is missing; npm returns 404 instead of 401 by design.
-      # Upgrade path: enable Trusted Publishing for this package on npmjs.com
-      # and the token can be dropped entirely (id-token: write is already set).
+      # No NODE_AUTH_TOKEN, and no --provenance flag: trusted publishing
+      # authenticates via OIDC and attaches provenance automatically.
       - name: Publish to npm
         if: steps.check.outputs.skip != 'true'
-        run: npm publish --provenance --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public

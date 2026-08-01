@@ -1,0 +1,13 @@
+{
+  "name": "create-shopify-firebase-app",
+  "platforms": ["Web"],
+  "content": "README.md",
+  "pages": {},
+  "related": [],
+  "tabs": [
+    {
+      "title": "npm",
+      "href": "https://www.npmjs.com/package/create-shopify-firebase-app"
+    }
+  ]
+}

@@ -6,6 +6,11 @@ client_id = "{{API_KEY}}"
 application_url = "{{APP_URL}}"
 embedded = true
 
+[build]
+# Push the URLs and scopes in this file to Shopify on `shopify app deploy`
+include_config_on_deploy = true
+automatically_update_urls_on_dev = true
+
 [access_scopes]
 scopes = "{{SCOPES}}"
 

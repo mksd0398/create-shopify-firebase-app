@@ -190,7 +190,7 @@ shopify app dev
 
 ## Why Firebase?
 
-**$0/month to run your Shopify app. No credit card. No server. No bill until you're big.**
+**$0/month to run your Shopify app. No credit card cost. No server. No bill until you're big.**
 
 Most Shopify app developers pay for hosting before they even have users. With Firebase, you deploy for free and only start paying when your app serves thousands of stores daily. Even at 50,000 installed stores, you're looking at ~$5/month. Try getting that from Vercel or Heroku.
 

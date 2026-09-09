@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 /**
- * nitrogen
+ * create-shopify-firebase-app
  *
  * Usage:
- *   npm create nitrogen my-app
+ *   npx create-shopify-firebase-app my-app
  *   npm create shopify-firebase-app my-app
- *   npm create nitrogen               (interactive)
+ *   npx create-shopify-firebase-app          (interactive)
  */
 
 import { run } from "../lib/index.js";

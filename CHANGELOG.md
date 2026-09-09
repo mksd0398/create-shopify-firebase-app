@@ -1,24 +1,5 @@
 # Changelog
 
-## 3.0.0
-
-### Changed
-
-- Renamed to **nitrogen**. The package is now `create-nitrogen` and the command
-  is `npm create nitrogen my-app` (or `npx create-nitrogen my-app`). The old
-  name described the stack rather than naming the tool, and sat closer to
-  Shopify's trademark than a third-party scaffolder should. Nitrogen follows
-  Shopify's own element naming - Hydrogen, Oxygen - and reads as the inert
-  layer everything else runs inside, which is what a zero-framework scaffolder
-  is.
-- No functional changes. Every flag, prompt and generated file is identical to
-  2.2.1; only the package name, binary name and branding differ.
-
-### Migrating
-
-`create-shopify-firebase-app` is deprecated. Nothing to change in a generated
-project - only the command you scaffold with.
-
 ## 2.2.1
 
 ### Fixed

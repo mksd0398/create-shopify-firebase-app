@@ -1,13 +1,13 @@
-# create-nitrogen
+# create-shopify-firebase-app
 
 > Build and run Shopify apps for free. Pay nothing until you have real traffic. One command. Zero framework. Fully serverless.
 
-[![npm version](https://img.shields.io/npm/v/create-nitrogen.svg)](https://www.npmjs.com/package/create-nitrogen)
-[![Downloads](https://img.shields.io/npm/dm/create-nitrogen.svg)](https://www.npmjs.com/package/create-nitrogen)
+[![npm version](https://img.shields.io/npm/v/create-shopify-firebase-app.svg)](https://www.npmjs.com/package/create-shopify-firebase-app)
+[![Downloads](https://img.shields.io/npm/dm/create-shopify-firebase-app.svg)](https://www.npmjs.com/package/create-shopify-firebase-app)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ```bash
-npx create-nitrogen my-app
+npx create-shopify-firebase-app my-app
 ```
 
 <p align="center">
@@ -81,13 +81,13 @@ you in to both; you don't need to open either dashboard first.
 ### 1. Run the scaffold
 
 ```bash
-npx create-nitrogen my-app
+npx create-shopify-firebase-app my-app
 ```
 
 The CLI walks the entire flow. This is a real run:
 
 ```
-  🛍️  +  🔥  create-nitrogen
+  🛍️  +  🔥  create-shopify-firebase-app
 
   === Environment Check ===
 
@@ -194,7 +194,7 @@ shopify app dev
 
 Most Shopify app developers pay for hosting before they even have users. With Firebase, you deploy for free and only start paying when your app serves thousands of stores daily. Even at 50,000 installed stores, you're looking at ~$5/month. Try getting that from Vercel or Heroku.
 
-| | `shopify app init` (Remix) | `create-nitrogen` |
+| | `shopify app init` (Remix) | `create-shopify-firebase-app` |
 |---|---|---|
 | **Backend** | Remix server (monolith) | Firebase v2 Cloud Functions (4 independent functions) |
 | **Database** | Prisma + PostgreSQL | Cloud Firestore (NoSQL, auto-scaling) |
@@ -317,19 +317,19 @@ Each function scales independently on Cloud Run (Firebase v2 / gen 2):
 
 ```bash
 # Interactive (recommended)
-npx create-nitrogen
+npx create-shopify-firebase-app
 
 # With project name
-npx create-nitrogen my-app
+npx create-shopify-firebase-app my-app
 
 # Skip the deploy steps (scaffold only)
-npx create-nitrogen my-app --no-deploy
+npx create-shopify-firebase-app my-app --no-deploy
 
 # Auto-install any missing CLI tools without asking
-npx create-nitrogen my-app --yes
+npx create-shopify-firebase-app my-app --yes
 
 # Non-interactive (CI/CD)
-npx create-nitrogen my-app \
+npx create-shopify-firebase-app my-app \
   --api-key=abc123 \
   --api-secret=secret \
   --project-id=my-firebase-project \
@@ -337,7 +337,7 @@ npx create-nitrogen my-app \
   --scopes=read_products,write_products
 
 # Help
-npx create-nitrogen --help
+npx create-shopify-firebase-app --help
 ```
 
 ---
@@ -569,10 +569,10 @@ These are **required** for Shopify App Store listing.
 Contributions welcome! Please open an issue or PR.
 
 ```bash
-git clone https://github.com/mksd0398/create-nitrogen.git
-cd create-nitrogen
+git clone https://github.com/mksd0398/create-shopify-firebase-app.git
+cd create-shopify-firebase-app
 npm install
-npm link  # Test locally: create-nitrogen test-app
+npm link  # Test locally: create-shopify-firebase-app test-app
 ```
 
 ---

@@ -1,5 +1,5 @@
 {
-  "name": "create-nitrogen",
+  "name": "create-shopify-firebase-app",
   "platforms": ["Web"],
   "content": "README.md",
   "pages": {},
@@ -7,7 +7,7 @@
   "tabs": [
     {
       "title": "npm",
-      "href": "https://www.npmjs.com/package/create-nitrogen"
+      "href": "https://www.npmjs.com/package/create-shopify-firebase-app"
     }
   ]
 }

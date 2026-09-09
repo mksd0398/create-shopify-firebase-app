@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
 import { verifySessionToken } from "./verify-token";
-import { getAccessToken } from "./auth";
+import { getAccessToken, StaleIdTokenError } from "./auth";
 import { db } from "./firebase";
 
 export const adminApiRouter = Router();
@@ -22,15 +22,41 @@ const DEFAULT_SETTINGS = {
   customCss: "",
 };
 
+
+/**
+ * Resolve the shop's Admin API access token, obtaining one by token exchange
+ * on first call. Returns null after having already answered the request.
+ */
+async function requireAccessToken(
+  req: Request,
+  res: Response,
+): Promise<string | null> {
+  const shop = (req as any).shopDomain;
+  try {
+    const token = await getAccessToken(shop, (req as any).rawSessionToken);
+    if (!token) {
+      res.status(401).json({ error: "Shop not authenticated" });
+      return null;
+    }
+    return token;
+  } catch (err) {
+    if (err instanceof StaleIdTokenError) {
+      // App Bridge sees this header, fetches a fresh ID token, and retries.
+      res.setHeader("X-Shopify-Retry-Invalid-Session-Request", "1");
+      res.status(401).json({ error: "Stale ID token" });
+      return null;
+    }
+    console.error("Could not obtain an access token:", err);
+    res.status(500).json({ error: "Authentication failed" });
+    return null;
+  }
+}
+
 // ─── Get shop info ───────────────────────────────────────────────────────
 adminApiRouter.get("/shop", async (req: Request, res: Response) => {
   const shop = (req as any).shopDomain;
-  const accessToken = await getAccessToken(shop);
-
-  if (!accessToken) {
-    res.status(401).json({ error: "Shop not authenticated" });
-    return;
-  }
+  const accessToken = await requireAccessToken(req, res);
+  if (!accessToken) return;
 
   try {
     const response = await fetch(
@@ -88,12 +114,8 @@ adminApiRouter.get("/shop", async (req: Request, res: Response) => {
 adminApiRouter.get("/products/search", async (req: Request, res: Response) => {
   const shop = (req as any).shopDomain;
   const query = (req.query.q as string) || "";
-  const accessToken = await getAccessToken(shop);
-
-  if (!accessToken) {
-    res.status(401).json({ error: "Shop not authenticated" });
-    return;
-  }
+  const accessToken = await requireAccessToken(req, res);
+  if (!accessToken) return;
 
   try {
     const response = await fetch(
@@ -153,12 +175,8 @@ adminApiRouter.get("/products/search", async (req: Request, res: Response) => {
 // ─── Get product detail ─────────────────────────────────────────────────
 adminApiRouter.get("/products/:id", async (req: Request, res: Response) => {
   const shop = (req as any).shopDomain;
-  const accessToken = await getAccessToken(shop);
-
-  if (!accessToken) {
-    res.status(401).json({ error: "Shop not authenticated" });
-    return;
-  }
+  const accessToken = await requireAccessToken(req, res);
+  if (!accessToken) return;
 
   // Express 5 types params as string | string[] (repeatable params);
   // a single ":id" segment is always a string.
@@ -298,7 +316,8 @@ adminApiRouter.post("/settings", async (req: Request, res: Response) => {
 //
 //   adminApiRouter.post("/my-endpoint", async (req, res) => {
 //     const shop = (req as any).shopDomain;
-//     const accessToken = await getAccessToken(shop);
+//     const accessToken = await requireAccessToken(req, res);
+//     if (!accessToken) return;
 //     // Call Shopify Admin API, write to Firestore, etc.
 //     res.json({ success: true });
 //   });

@@ -28,6 +28,8 @@ function verifySessionToken(req, res, next) {
     const issUrl = new URL(decoded.iss);
     req.shopDomain = issUrl.hostname;
     req.sessionToken = decoded;
+    // Token exchange needs the raw JWT, not the decoded payload.
+    req.rawSessionToken = token;
 
     next();
   } catch (err) {

@@ -46,6 +46,8 @@ export function verifySessionToken(
     const issUrl = new URL(decoded.iss);
     (req as any).shopDomain = issUrl.hostname;
     (req as any).sessionToken = decoded;
+    // Token exchange needs the raw JWT, not the decoded payload.
+    (req as any).rawSessionToken = token;
 
     next();
   } catch (err) {

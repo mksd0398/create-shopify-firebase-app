@@ -1,7 +1,7 @@
 {
   "name": "create-shopify-firebase-app",
-  "version": "2.2.1",
-  "description": "Create Shopify apps powered by Firebase — multi-page dashboard, App Bridge, Polaris components, TypeScript or JavaScript. Deploy for free.",
+  "version": "2.2.2",
+  "description": "Create Shopify apps powered by Firebase \u2014 multi-page dashboard, App Bridge, Polaris components, TypeScript or JavaScript. Deploy for free.",
   "keywords": [
     "shopify",
     "firebase",

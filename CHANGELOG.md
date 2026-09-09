@@ -1,5 +1,30 @@
 # Changelog
 
+## 2.2.2
+
+### Fixed
+
+- Get an access token the way a real install actually provides one. Apps built
+  with the Shopify CLI use managed installation by default: Shopify grants the
+  scopes and loads the embedded app **without ever calling `/auth`**. The
+  scaffold only implemented the legacy authorization-code grant, so a normal
+  install - the Install button, or a custom distribution link - left no token
+  in Firestore and every Admin API call answered "Shop not authenticated".
+  Reaching the app only worked if you visited `/auth?shop=...` by hand, which
+  is not a path any merchant takes.
+
+  The backend now performs token exchange: the App Bridge ID token that
+  `verifySessionToken` already validates is exchanged for an offline access
+  token on first use and stored in `shopSessions`. No redirect, no consent
+  screen, and it works on the very first load.
+
+  A stale ID token (Shopify answers 400, and they expire in about a minute) is
+  returned as a 401 with `X-Shopify-Retry-Invalid-Session-Request`, so App
+  Bridge fetches a fresh one and retries instead of surfacing an error.
+
+  The `/auth` and `/auth/callback` routes are unchanged, so an app still on the
+  legacy install flow keeps working.
+
 ## 2.2.1
 
 ### Fixed

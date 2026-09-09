@@ -215,10 +215,79 @@ async function handleCallback(req: Request, res: any): Promise<void> {
   }
 }
 
-// Helper: get stored access token for a shop
-export async function getAccessToken(shop: string): Promise<string | null> {
+
+// ─── Token exchange ──────────────────────────────────────────────────────
+// Apps built with the Shopify CLI use managed installation by default:
+// Shopify installs the app and grants scopes WITHOUT calling /auth, so the
+// authorization-code routes above never run for a normal install. The
+// embedded app is simply loaded with an ID token, and this is how that ID
+// token becomes an Admin API access token.
+// Docs: https://shopify.dev/docs/apps/build/authentication-authorization/access-tokens
+
+/** Thrown when Shopify rejects the ID token as stale — routine, not a fault. */
+export class StaleIdTokenError extends Error {
+  readonly staleIdToken = true;
+  constructor() {
+    super("ID token is expired or invalid");
+  }
+}
+
+async function exchangeIdToken(shop: string, idToken: string): Promise<string> {
+  const config = getConfig();
+
+  const response = await fetch(`https://${shop}/admin/oauth/access_token`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      client_id: config.apiKey,
+      client_secret: config.apiSecret,
+      grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+      subject_token: idToken,
+      subject_token_type: "urn:ietf:params:oauth:token-type:id_token",
+      requested_token_type:
+        "urn:shopify:params:oauth:token-type:offline-access-token",
+    }),
+  });
+
+  // An ID token lives about a minute, so 400 here is expected rather than
+  // broken. The caller answers it with a 401 + retry header and App Bridge
+  // fetches a fresh one.
+  if (response.status === 400) throw new StaleIdTokenError();
+
+  if (!response.ok) {
+    throw new Error(
+      `Token exchange failed (${response.status}): ${await response.text()}`,
+    );
+  }
+
+  const data: any = await response.json();
+  if (!data.access_token) throw new Error("Token exchange returned no token");
+
+  await db.collection("shopSessions").doc(shop).set({
+    shop,
+    accessToken: data.access_token,
+    scope: data.scope,
+    expiresAt: null,
+    isOnline: false,
+    installedAt: new Date().toISOString(),
+    source: "token-exchange",
+  });
+
+  console.log(`Access token obtained via token exchange for ${shop}`);
+  return data.access_token;
+}
+
+// Helper: get an access token for a shop.
+// Reads the stored one; falls back to token exchange when an ID token is
+// supplied, which is the path a managed install takes.
+export async function getAccessToken(
+  shop: string,
+  idToken?: string,
+): Promise<string | null> {
   const doc = await db.collection("shopSessions").doc(shop).get();
-  if (!doc.exists) return null;
+  if (!doc.exists) {
+    return idToken ? await exchangeIdToken(shop, idToken) : null;
+  }
 
   const data = doc.data();
 
@@ -226,8 +295,9 @@ export async function getAccessToken(shop: string): Promise<string | null> {
   // Shopify rather than a clean "reinstall me" signal.
   if (data?.expiresAt && new Date(data.expiresAt).getTime() <= Date.now()) {
     console.warn(`Access token for ${shop} expired at ${data.expiresAt}`);
-    return null;
+    return idToken ? await exchangeIdToken(shop, idToken) : null;
   }
 
-  return data?.accessToken || null;
+  if (data?.accessToken) return data.accessToken;
+  return idToken ? await exchangeIdToken(shop, idToken) : null;
 }

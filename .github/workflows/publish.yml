@@ -12,7 +12,8 @@ name: Publish to npm
 # This requires a one-time setup on npmjs.com, under the package's
 # Settings -> Trusted Publisher:
 #   Organization or user : mksd0398
-#   Repository           : create-shopify-firebase-app
+#   Repository           : create-shopify-firebase-app   <- the GitHub repo
+#   Package on npm       : create-nitrogen
 #   Workflow filename    : publish.yml     <- must match THIS file's name
 #   Environment          : (leave blank)
 #   Allowed actions      : npm publish
@@ -81,7 +82,7 @@ jobs:
         id: check
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          PUBLISHED=$(npm view create-shopify-firebase-app@$PACKAGE_VERSION version 2>/dev/null || echo "")
+          PUBLISHED=$(npm view create-nitrogen@$PACKAGE_VERSION version 2>/dev/null || echo "")
           if [ "$PUBLISHED" = "$PACKAGE_VERSION" ]; then
             echo "skip=true" >> $GITHUB_OUTPUT
             echo "Version $PACKAGE_VERSION already published — skipping"

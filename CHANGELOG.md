@@ -1,5 +1,35 @@
 # Changelog
 
+## 2.2.1
+
+### Fixed
+
+- Pause for the Blaze upgrade instead of failing on it. Cloud Functions cannot
+  deploy without billing, and the run used to print a one-line note, continue,
+  and die minutes later inside the container build. It now stops before the
+  deploy, offers to open the upgrade page, waits for confirmation, and then
+  carries on with the deploy and the Shopify update in the same run.
+- Skip the deploy entirely when the user declines the upgrade, rather than
+  spending minutes reaching a known failure. The summary then leads with the
+  upgrade link instead of claiming the app is ready.
+- A deploy that fails on a Spark project no longer suggests raising
+  `FUNCTIONS_DISCOVERY_TIMEOUT`, which cannot help a billing rejection.
+- Never offer to create a Firebase project that was just created. The scaffold
+  creates it, then provisioning re-derived existence from `projects:list`,
+  which is eventually consistent. On a slow index that came back empty and
+  prompted "Create Firebase project X?" for a project that already existed -
+  and the second `projects:create` then died on "already exists", aborting the
+  run with nothing provisioned.
+- Stop misreading firebase-tools failures. The captured stderr is often just an
+  ora spinner frame ("- Creating Google Cloud Platform project"), so the
+  "already exists" match missed and a recoverable state became a hard failure.
+  Existence is now probed directly, and reported errors skip spinner noise.
+- Always offer a Firestore region. `firestore:locations` needs the Firestore
+  API, which a brand-new project does not have enabled yet, so it failed
+  exactly when first needed - silently skipping the prompt and leaving the
+  project with no database. It now falls back to a built-in region list.
+- Don't print "Firebase authenticated" twice.
+
 ## 2.2.0
 
 Fixes from real-world feedback on 2.1.0 — the scaffolded project now ends up in
